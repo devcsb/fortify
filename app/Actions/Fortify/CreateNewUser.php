@@ -20,8 +20,10 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input)
     {
-        Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
+        Validator::make($input, [               // Validator::make(검사받을 데이터, 적용될 규칙)
+            'name' => [
+                'required', 'string', 'max:255', 'regex:/^[A-Za-z0-9_]{4,16}$/'
+            ],
             'email' => [
                 'required',
                 'string',
@@ -30,12 +32,17 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
+            'gender' => ['required', 'in:male,female'],
+            'phone' => ['required', 'string'],
+
         ])->validate();
 
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
+            'gender' => $input['gender'],
+            'phone' => $input['phone'],
         ]);
     }
 }

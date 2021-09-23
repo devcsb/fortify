@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
+                <div class="card-header">{{ __('정보') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -14,7 +14,8 @@
                         </div>
                     @endif
 
-                    {{ __('You are logged in!') }}
+                    {{ __('로그인 상태입니다!') }}
+                    
                 </div>
             </div>
         </div>

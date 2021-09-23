@@ -168,6 +168,7 @@ return [
 
         /*
          * Application Service Providers...
+         * Fortify 등록
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
