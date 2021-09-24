@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use \App\Http\Controllers\BoardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,3 +19,5 @@ Route::get('/', function () {
 });
 
 Route::view('home', 'home')->middleware('auth');
+
+Route::resource('boards', BoardController::class);
