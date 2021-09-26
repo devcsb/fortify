@@ -30,23 +30,12 @@
                               </tr>
                               @endforeach
                         </tbody>
-                      
-                    
-                    
-                  </table>
-                <div class="card-body">
-                    
-                    {{-- @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('로그인 상태입니다!') }} --}}
-                    
-                </div>
-            </div>
-        </div>
+                        
+                        
+                      </table>
+                    </div>
+                    <a href="{{ route('boards.create') }}" style="float: right; margin-top: 15px;"><button>글쓰기</button></a>
+                  </div>
     </div>
 </div>
 @endsection

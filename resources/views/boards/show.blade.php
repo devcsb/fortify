@@ -20,18 +20,15 @@
                     </thead>
                   </table>
                   내용: {{ $board->content }}
-                <div class="card-body">
-                    
-                    {{-- @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('로그인 상태입니다!') }} --}}
-                    
                 </div>
-            </div>
+                <form action="{{ route('boards.destroy',$board->id) }}" method="POST">
+                  @csrf
+                  @method('DELETE')
+                  <button style="float: right; margin: 15px;">글 삭제</button>
+              </form>
+                {{-- <a href="{{ route('boards.destroy',$board->id) }}" style="float: right; margin: 15px;"><button>글 삭제</button></a> --}}
+                {{-- delete 리퀘스트는 그냥 href로 하면 안먹힘. post로 보내거나, post로 보내는 폼 안에서 @method('DELETE') 지시어로 delete요청으로 바꿔서 보내야 한다. --}}
+                <a href="{{ route('boards.edit',$board->id) }}" style="float: right; margin-top: 15px;"><button>글 수정</button></a>
         </div>
     </div>
 </div>

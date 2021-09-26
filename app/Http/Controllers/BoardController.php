@@ -16,7 +16,7 @@ class BoardController extends Controller
      */
     public function index()
     {
-        $boards = Board::all();
+        $boards = Board::get();
         return view('boards.index', compact('boards'));
     }
 
@@ -38,8 +38,19 @@ class BoardController extends Controller
      */
     public function store(StoreBoardRequest $request)
     {
-        //
+        //유효성체크와 동시에 create하겠다는 파사드
         Board::create($request->validated());
+
+        //StoreBoardRequest.php에서 유효성체크하면서 바로 insert 했으므로 여기서 다시 저장하면 중복저장됨.
+
+        // $board = new Board([
+        //     'name' => $request->input('name'),
+        //     'title' => $request->input('title'),
+        //     'content' => $request->input('content')
+        // ]);
+        // $board->save();
+
+
 
         return redirect()->route('boards.index');
     }
@@ -78,9 +89,24 @@ class BoardController extends Controller
     public function update(UpdateBoardRequest $request, Board $board)
     {
         //
-        $board->update($request->validate());
+        // $board->update($request->validate());
 
-        return redirect()->route('boards.index');
+        // $board = Board::find(Board $board);
+        // $board->title = $request->input('title');
+        // $board->content = $request->input('content');
+
+        $board->update($request->all());
+
+
+        // [
+
+        //     'title' => $request->input('title'),
+        //     'content' => $request->input('content')
+        // ];
+        // $board->save();
+
+
+        return redirect()->route('boards.show', $board->id);
     }
 
     /**
@@ -91,7 +117,9 @@ class BoardController extends Controller
      */
     public function destroy(Board $board)
     {
-        //
+        // $board = Board::find($board);
+        $board->delete();
+
         return redirect()->route('boards.index');
     }
 }

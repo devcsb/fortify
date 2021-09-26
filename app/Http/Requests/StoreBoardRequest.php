@@ -13,7 +13,7 @@ class StoreBoardRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,6 +24,9 @@ class StoreBoardRequest extends FormRequest
     public function rules()
     {
         return [
+            'name' => 'required|min:4',
+            'title' => 'required|min:8',
+            'content' => 'required|min:10'
             //
         ];
     }
