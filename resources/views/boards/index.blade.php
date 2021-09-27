@@ -10,7 +10,10 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                       <tr>
-                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 80%">
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          글번호
+                        </th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 60%">
                           제목
                         </th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -24,7 +27,8 @@
                         <tbody>
                             @foreach ($boards as $board)
                             <tr>
-                                <td style="width: 80%"><a href="{{ route('boards.show', $board->id) }}">{{ $board->title }}</a></td>
+                                <td>{{ $board->id }}</td>
+                                <td style="width: 60%"><a href="{{ route('boards.show', $board->id) }}">{{ $board->title }}</a></td>
                                 <td>{{ $board->name }}</td>
                                 <td>{{ substr($board->created_at,5,5) }}</td>
                               </tr>
@@ -38,9 +42,10 @@
                     <div class="col-md-4 style="margin:10px"> {{ $boards->links('vendor.pagination.custom') }}</div>
 
 
-                  <form action="{{ route('boards.index') }}" method="GET" role="search" class="col-md-4 style="margin:10px; float: right;">
+                  </div>
+                  <form action="{{ route('boards.index') }}" method="GET" role="search" class="col-md-4" style="margin:10px; float: right;">
 
-                    <input type="text" class="form-control mr-2" name="search" placeholder="Search projects" id="search" style="float:right">
+                    <input type="text" class="form-control mr-2" name="search" placeholder="검색할 내용을 입력하세요" id="search" style="float:right">
                     <div class="input-group">
                         <span class="input-group-btn mr-5 mt-1">
                             <button type="submit" title="Search projects">
@@ -50,7 +55,6 @@
                         
                     </div>
                 </form>
-                  </div>
                 </div>
               </div>
 @endsection
