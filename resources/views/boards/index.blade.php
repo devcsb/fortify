@@ -26,15 +26,30 @@
                             <tr>
                                 <td style="width: 80%"><a href="{{ route('boards.show', $board->id) }}">{{ $board->title }}</a></td>
                                 <td>{{ $board->name }}</td>
-                                <td></td>
+                                <td>{{ substr($board->created_at,5,5) }}</td>
                               </tr>
                               @endforeach
                         </tbody>
                         
                       </table>
                     </div>
+                    <a href="{{ route('boards.index') }}" style="float: right; margin: 15px;"><button>목록</button></a>
                     <a href="{{ route('boards.create') }}" style="float: right; margin-top: 15px;"><button>글쓰기</button></a>
                     <div class="col-md-4 style="margin:10px"> {{ $boards->links('vendor.pagination.custom') }}</div>
+
+
+                  <form action="{{ route('boards.index') }}" method="GET" role="search" class="col-md-4 style="margin:10px; float: right;">
+
+                    <input type="text" class="form-control mr-2" name="search" placeholder="Search projects" id="search" style="float:right">
+                    <div class="input-group">
+                        <span class="input-group-btn mr-5 mt-1">
+                            <button type="submit" title="Search projects">
+                                <span class="fas fa-search">검색</span>
+                            </button>
+                        </span>
+                        
+                    </div>
+                </form>
                   </div>
                 </div>
               </div>

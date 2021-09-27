@@ -14,10 +14,13 @@ class BoardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // $boards = Board::get();
-        $boards = Board::orderByDesc('id')->paginate(5);
+        //검색기능 추가
+        $boards = Board::where('title', 'Like', '%' . $request->search . '%')->orderByDesc('id')->paginate(5);
+        // $boards = Board::orderByDesc('id')->paginate(5);
+
+
         return view('boards.index', compact('boards'));
     }
 
