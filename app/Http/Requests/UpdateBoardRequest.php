@@ -15,8 +15,8 @@ class UpdateBoardRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|min:8',
-            'content' => 'required|min:10'
+            'title' => 'required',
+            'content' => 'required'
             //
         ];
     }

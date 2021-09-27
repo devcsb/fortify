@@ -21,6 +21,7 @@
                   </table>
                   내용: {{ $board->content }}
                 </div>
+                <a href="{{ route('boards.index')}}" style="float: right; margin-top: 15px;"><button>글 목록</button></a>
                 <form action="{{ route('boards.destroy',$board->id) }}" method="POST">
                   @csrf
                   @method('DELETE')
@@ -29,6 +30,7 @@
                 {{-- <a href="{{ route('boards.destroy',$board->id) }}" style="float: right; margin: 15px;"><button>글 삭제</button></a> --}}
                 {{-- delete 리퀘스트는 그냥 href로 하면 안먹힘. post로 보내거나, post로 보내는 폼 안에서 @method('DELETE') 지시어로 delete요청으로 바꿔서 보내야 한다. --}}
                 <a href="{{ route('boards.edit',$board->id) }}" style="float: right; margin-top: 15px;"><button>글 수정</button></a>
+
         </div>
     </div>
 </div>

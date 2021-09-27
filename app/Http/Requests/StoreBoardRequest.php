@@ -24,9 +24,9 @@ class StoreBoardRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:4',
-            'title' => 'required|min:8',
-            'content' => 'required|min:10'
+            'name' => 'required',
+            'title' => 'required',
+            'content' => 'required'
             //
         ];
     }

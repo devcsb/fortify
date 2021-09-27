@@ -16,7 +16,8 @@ class BoardController extends Controller
      */
     public function index()
     {
-        $boards = Board::get();
+        // $boards = Board::get();
+        $boards = Board::orderByDesc('id')->paginate(5);
         return view('boards.index', compact('boards'));
     }
 

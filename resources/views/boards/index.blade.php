@@ -31,11 +31,11 @@
                               @endforeach
                         </tbody>
                         
-                        
                       </table>
                     </div>
                     <a href="{{ route('boards.create') }}" style="float: right; margin-top: 15px;"><button>글쓰기</button></a>
+                    <div class="col-md-4 style="margin:10px"> {{ $boards->links('vendor.pagination.custom') }}</div>
                   </div>
-    </div>
-</div>
+                </div>
+              </div>
 @endsection
