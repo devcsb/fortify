@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Board;
+use App\Models\User;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BoardFactory extends Factory
@@ -22,7 +24,12 @@ class BoardFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name(),
+            'name' => User::all()->random()->name,
+            // 'email' => User::all()->random()->email,
+            'email' => function ($board) {
+                // return User::where('name', '=', User::find($board['name']));
+                return User::find($board['name']);
+            },
             'title' => $this->faker->sentence(),
             'content' => $this->faker->sentence(),
             'file' => $this->faker->sentence(),

@@ -11,7 +11,7 @@ class Board extends Model
 
     protected $fillable = [
         'name',
-        // 'email',
+        'email',
         'title',
         'content',
         'file',
