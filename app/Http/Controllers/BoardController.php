@@ -133,21 +133,24 @@ class BoardController extends Controller
 
         $validated = $request->validated();
 
-        dd($request);
-        // $board = new Board([
-        //     'name' => $validated['name'],
-        //     'email' => $validated['email'],
-        //     'title' => $validated['title'],
-        //     'content' => $validated['content'],
-        // ]);
-        // if ($request->hasFile('file')) {
-        //     $fileName = time() . '_' . $validated['file']->getClientOriginalName();
-        //     $filePath = $validated['file']->storeAs('uploads', $fileName, 'public'); // storeAs($path, $name, $disk); 세번째 $disk는 옵션. $disk에는 filesystems.php에서 정의한 disk를 선택
-        //     $board->file_name = $fileName;
-        //     $board->file_path = $filePath;
-        // }
+        // dd($request);
+        // $board = Board::find($validated['email']); //find 메서드는 인자로 받은 id값으로 해당 행을 검색한다. where문이 아님. id값만 검색하는 메서드
+        $board = Board::firstWhere('email', $validated['email']);
 
-        // $board->save();
+        $board->name = $validated['name'];
+        $board->email = $validated['email'];
+        $board->title = $validated['title'];
+        $board->content = $validated['content'];
+
+        if ($request->hasFile('file')) {
+            $fileName = time() . '_' . $validated['file']->getClientOriginalName();
+            $filePath = $validated['file']->storeAs('uploads', $fileName, 'public'); // storeAs($path, $name, $disk); 세번째 $disk는 옵션. $disk에는 filesystems.php에서 정의한 disk를 선택
+            $board->file_name = $fileName;
+            $board->file_path = $filePath;
+        }
+
+        $board->save();
+
 
 
 

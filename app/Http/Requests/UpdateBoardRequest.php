@@ -15,9 +15,12 @@ class UpdateBoardRequest extends FormRequest
     public function rules()
     {
         return [
-
+            'name' => 'required',
+            'email' => 'required',
             'title' => 'required',
-            'content' => 'required'
+            'content' => 'required',
+            'file' => 'min:1',
+            'file.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             //
         ];
     }
