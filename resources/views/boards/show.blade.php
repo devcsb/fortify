@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('글 목록 ') }}</div>
+                <div class="card-header">{{ __('글 내용 ') }}</div>
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                       <tr>
@@ -20,6 +20,12 @@
                     </thead>
                   </table>
                   내용: {{ $board->content }}
+                  <div style="margin-top:50px">
+                  <img src="{{asset('storage/'.$board->file_path)}}" alt="1" style="width: 50%; height: 50%">
+                  </div>
+                  <div id="file_view">
+                    첨부파일: <a href="{{ Storage::url($board->file_path) }}" download>{{ Storage::url($board->file_path) }}</a>
+                  </div>
                 </div>
                 <a href="{{ route('boards.index')}}" style="float: right; margin-top: 15px;"><button>글 목록</button></a>
                 <form action="{{ route('boards.destroy',$board->id) }}" method="POST">

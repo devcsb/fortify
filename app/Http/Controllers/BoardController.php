@@ -14,6 +14,13 @@ class BoardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        $this->middleware('auth')
+            ->except(["index", "show"]);
+    }
+
     public function index(Request $request)
     {
         //검색기능 추가
@@ -43,16 +50,25 @@ class BoardController extends Controller
     public function store(StoreBoardRequest $request)
     {
         //유효성체크와 동시에 create하겠다는 파사드
-        Board::create($request->validated());
+        // Board::create($request->validated());
 
-        //StoreBoardRequest.php에서 유효성체크하면서 바로 insert 했으므로 여기서 다시 저장하면 중복저장됨.
+        //RequestForm에서는 유효성 체크만 하고 비즈니스로직을 넣지말고 아래와 같이 유효성 값만 반환받아 컨트롤러에서 작성하자.
+        $validated = $request->validated();
 
-        // $board = new Board([
-        //     'name' => $request->input('name'),
-        //     'title' => $request->input('title'),
-        //     'content' => $request->input('content')
-        // ]);
-        // $board->save();
+        $board = new Board([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'title' => $validated['title'],
+            'content' => $validated['content'],
+        ]);
+        if ($request->hasFile('file')) {
+            $fileName = time() . '_' . $validated['file']->getClientOriginalName();
+            $filePath = $validated['file']->storeAs('uploads', $fileName, 'public'); // storeAs($path, $name, $disk); 세번째 $disk는 옵션. $disk에는 filesystems.php에서 정의한 disk를 선택
+            $board->file_name = $fileName;
+            $board->file_path = $filePath;
+        }
+
+        $board->save();
 
 
 

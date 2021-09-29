@@ -19,7 +19,8 @@ class CreateBoardsTable extends Migration
             $table->string('email');
             $table->string('title');
             $table->text('content');
-            $table->text('file')->nullable();
+            $table->text('file_name')->nullable();
+            $table->text('file_path')->nullable();
             $table->timestamps();
 
             // $table->foreign('name')->references('name')->on('users');

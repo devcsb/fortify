@@ -26,9 +26,9 @@ class BoardFactory extends Factory
         return [
             'name' => User::all()->random()->name,
             // 'email' => User::all()->random()->email,
-            'email' => function ($dd) { //전달받은 변수명 값을 어디서 무엇을 받아오는 것인지?
+            'email' => function ($dd) { //전달받은 함수 인자 값. 어떻게 어디서 무엇을 받아오는 것인지?
                 // return User::where('name', '=', User::find($board['name']));
-                dd($dd);
+                print_r($dd);
                 return User::where('name', $dd)->value('email');
                 // return User::find($board['name']);
             },

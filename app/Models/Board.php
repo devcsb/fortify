@@ -14,6 +14,7 @@ class Board extends Model
         'email',
         'title',
         'content',
-        'file',
+        'file_name',
+        'file_path',
     ];
 }
