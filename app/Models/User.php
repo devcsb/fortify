@@ -49,4 +49,9 @@ class User extends Authenticatable
     //     $user = User::factory()->make();
     // }
 
+    //일대다 관계 설정
+    public function boards()
+    {
+        return $this->hasMany(Board::class, 'email');
+    }
 }

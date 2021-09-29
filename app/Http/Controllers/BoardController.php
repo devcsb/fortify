@@ -54,7 +54,6 @@ class BoardController extends Controller
 
         //RequestForm에서는 유효성 체크만 하고 비즈니스로직을 넣지말고 아래와 같이 유효성 값만 반환받아 컨트롤러에서 작성하자.
         $validated = $request->validated();
-
         $board = new Board([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -95,7 +94,17 @@ class BoardController extends Controller
      */
     public function edit(Board $board)
     {
-        //
+        //권한제어
+        // if ($board->email !== auth()->email()) {  //새로 만든 함수라서 에디터에서 인식 못하는 문제? or Auth/SessionGuard 커스텀시 수정해야하는 코드가 있는지?
+        //     abort(403);
+        // }
+
+        //위 코드를 abort_if 헬퍼함수로 한줄로 요약
+        // abort_if($board->email !== auth()->email(), 403);
+
+        //Policy 사용한 권한제어
+        $this->authorize('view', $board);
+
         return view('boards.edit', compact('board'));
     }
 
@@ -108,22 +117,38 @@ class BoardController extends Controller
      */
     public function update(UpdateBoardRequest $request, Board $board)
     {
-        //
-        // $board->update($request->validate());
+        //권한제어
+        // if ($board->email !== auth()->email()) {  //새로 만든 함수라서 에디터에서 인식 못하는 문제? or Auth/SessionGuard 커스텀시 수정해야하는 코드가 있는지?
+        //     abort(403);
+        // }
 
-        // $board = Board::find(Board $board);
-        // $board->title = $request->input('title');
-        // $board->content = $request->input('content');
+        //위 코드를 abort_if 헬퍼함수로 한줄로 요약
+        // abort_if($board->email !== auth()->email(), 403);
 
-        $board->update($request->all());
+        //Policy 사용한 권한제어 // 책 366p. 첫번 째 파라미터로 어빌리티명, 두 번째로 객체를 받는 authorize()함수
+        $this->authorize('update', $board);
 
 
-        // [
+        // $board->update($request->all());
 
-        //     'title' => $request->input('title'),
-        //     'content' => $request->input('content')
-        // ];
+        $validated = $request->validated();
+
+        dd($request);
+        // $board = new Board([
+        //     'name' => $validated['name'],
+        //     'email' => $validated['email'],
+        //     'title' => $validated['title'],
+        //     'content' => $validated['content'],
+        // ]);
+        // if ($request->hasFile('file')) {
+        //     $fileName = time() . '_' . $validated['file']->getClientOriginalName();
+        //     $filePath = $validated['file']->storeAs('uploads', $fileName, 'public'); // storeAs($path, $name, $disk); 세번째 $disk는 옵션. $disk에는 filesystems.php에서 정의한 disk를 선택
+        //     $board->file_name = $fileName;
+        //     $board->file_path = $filePath;
+        // }
+
         // $board->save();
+
 
 
         return redirect()->route('boards.show', $board->id);
