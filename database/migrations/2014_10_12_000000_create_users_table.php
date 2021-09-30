@@ -24,6 +24,8 @@ class CreateUsersTable extends Migration
 
             // $table->unique(["name", "email"], 'name_email_unique');
             $table->unique(["name", "email"]);  //이름 알아서 정해주게끔
+
+            // $table->onDelete('NO ACTION');
         });
     }
 

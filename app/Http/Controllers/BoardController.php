@@ -133,7 +133,6 @@ class BoardController extends Controller
 
         $validated = $request->validated();
 
-        // dd($request);
         // $board = Board::find($validated['email']); //find 메서드는 인자로 받은 id값으로 해당 행을 검색한다. where문이 아님. id값만 검색하는 메서드
         $board = Board::firstWhere('email', $validated['email']);
 
@@ -165,7 +164,8 @@ class BoardController extends Controller
      */
     public function destroy(Board $board)
     {
-        // $board = Board::find($board);
+        $this->authorize('delete', $board);
+
         $board->delete();
 
         return redirect()->route('boards.index');

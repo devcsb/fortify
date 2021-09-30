@@ -44,7 +44,9 @@
             
                 <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
                     <div style="color: rgb(40, 50, 141)"> fortify</div>
-                    <a href="{{ route('boards.index') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">글목록</a>
+                    <div class="col-md-6 offset-md-4">
+                    <a href="{{ route('boards.index') }}" class="btn btn-xs btn-info pull-right">글 목록</a>
+                    </div>
                     <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
                         <svg viewBox="0 0 651 192" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-16 w-auto text-gray-700 sm:h-20">
                             <g clip-path="url(#clip0)" fill="#EF3B2D">

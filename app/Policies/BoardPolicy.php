@@ -68,6 +68,7 @@ class BoardPolicy
     public function delete(User $user, Board $board)
     {
         //
+        return $board->email == $user->email;
     }
 
     /**

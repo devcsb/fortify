@@ -5,13 +5,8 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{Auth::name()."님 환영합니다!"}}</div>
-                {{--1. $session = Auth::name() 처럼 변수명 선언하는 방법
-                    2. Auth::name() 만 호출해서 바로  출력하는 방법. 어떤 것이 관례에 더 맞는? 재사용여부에 따라 다른지?
-                    and
-                    auth()->user()->id ; 처럼 헬퍼함수로 가져오는 방법과 퍼사드로 가져오는 방법 차이? 어느 상황에서 어떤 것이 더 올바른지?
-                    --}}
-
+                <div class="card-header">{{auth()->user()->name."님 환영합니다!"}}</div>
+                
                 <div class="card-body">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
@@ -19,10 +14,19 @@
                         </div>
                     @endif
 
-                    {{ Auth::name()."님은 현재 로그인 상태입니다!" }}
+                    {{ auth()->user()->name."님은 현재 로그인 상태입니다!" }}
                     
                 </div>
             </div>
+            <div class="form-group row mb-0">
+                <div class="col-md-6 offset-md-4">
+                    <a href="{{ route('boards.index') }}" class="btn btn-xs btn-info pull-right">글 목록</a>
+                </div>
+                <a href="{{ route('profile.edit') }}" class="btn btn-xs btn-info pull-right">회원정보수정</a>
+                
+                
+            </div>
+            <a href="{{ route('profile.password.edit') }}" class="btn btn-xs btn-info" style="float:right; margin-top:5px;">비밀번호 변경</a>
         </div>
     </div>
 </div>

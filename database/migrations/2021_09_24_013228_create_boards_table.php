@@ -26,7 +26,8 @@ class CreateBoardsTable extends Migration
             // $table->foreign('name')->references('name')->on('users');
             // $table->foreign('email')->references('email')->on('users');
             $table->foreign(["name", "email"])->references(["name", "email"])->on('users')
-                ->onUpdate('cascade');
+                ->onDelete('NO ACTION')
+                ->onUpdate('CASCADE');
         });
     }
 

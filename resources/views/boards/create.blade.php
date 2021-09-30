@@ -14,8 +14,8 @@
                     <table id ="write" class="min-w-full divide-y divide-gray-200">
                         <tr>
                             <td class="td_left"><label for="name">작성자</label></td>
-                            <td class="td_right">{{ Auth::name() }}<input name="name" type="hidden" id="name" value="{{ Auth::name() }}"></td>
-                            <input name="email" type="hidden" id="email" value="{{ Auth::email() }}">
+                            <td class="td_right">{{ auth()->user()->name }}<input name="name" type="hidden" id="name" value="{{ auth()->user()->name }}"></td>
+                            <input name="email" type="hidden" id="email" value="{{ auth()->user()->email }}">
                         </tr>
                         <tr>
                             <td class="td_left"><label for="title">제 목</label></td>

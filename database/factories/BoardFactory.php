@@ -25,15 +25,20 @@ class BoardFactory extends Factory
     {
         return [
             'name' => User::all()->random()->name,
-            // 'email' => User::all()->random()->email,
-            'email' => function ($dd) { //전달받은 함수 인자 값. 어떻게 어디서 무엇을 받아오는 것인지?
-                // return User::where('name', '=', User::find($board['name']));
-                return User::where('name', $dd)->value('email');
-                // return User::find($board['name']);
+            'email' => function ($callback) { //콜백함수. 메소드 return값인 배열 안에서 생성된 배열 한 행을 가져온다.
+                return User::where('name', $callback)->value('email');
+                // dd($dd);
             },
-            'title' => $this->faker->sentence(),
-            'content' => $this->faker->sentence(),
-            'file' => $this->faker->sentence(),
+            'title' => function ($callback) {
+                // return $dd['name'];
+                return $callback['name'] . "님이 쓴 글 제목/" . $this->faker->regexify('[A-Za_z0-9._%+-]{3,15}');
+                // dd($callback);
+            },
+            'content' => function ($callback) {
+                return $callback['name'] . "님이 쓴 글 내용/" . $this->faker->sentence(50) . $this->faker->regexify('[A-Za_z0-9._%+-]{3,12}');
+            },
+            // 'file_name' => $this->faker->sentence(15),
+            // 'file_path' => $this->faker->sentence(15),
 
         ];
     }
