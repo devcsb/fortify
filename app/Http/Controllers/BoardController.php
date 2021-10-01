@@ -25,9 +25,7 @@ class BoardController extends Controller
 
     public function index(Request $request)
     {
-        // $boards = Board::orderByDesc('id')->paginate(5);
 
-        //검색기능 추가
         $search = $request->input('search');
 
         $boards = Board::where('title', 'Like', '%' . $request->search . '%')->orderByDesc('id')->paginate(5);
