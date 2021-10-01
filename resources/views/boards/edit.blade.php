@@ -30,6 +30,19 @@
                             <td class="td_left"><label for="file">파일 첨부</label></td>
                             <td class="td_right"><input type="file" name="file"/></td>
                         </tr>
+                        <tr>
+                            <td class="td_left"></td>
+                            @if (isset($board->file_path))
+                            <td class="td_right"><label for="file">기존 첨부된 파일:{{ $board->file_name }}</label></td>
+                            @endif 
+                        </tr>
+                        
+                        <tr>
+                            <td class="td_left"></td>
+                            @if (isset($board->file_path))
+                            <td class="td_right">첨부파일 삭제하기<input type="checkbox" name="file_remove" value="remove"></td>
+                            @endif
+                        </tr>
                     </table>
                     <section id="commandCell">
                        <input type="reset" value="다시쓰기" style="float: right; margin-right: 10px;" /><input type="submit" value="저장" style="float: right; margin-right: 10px;">
