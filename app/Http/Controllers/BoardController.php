@@ -29,6 +29,7 @@ class BoardController extends Controller
 
         //검색기능 추가
         $search = $request->input('search');
+
         $boards = Board::where('title', 'Like', '%' . $request->search . '%')->orderByDesc('id')->paginate(5);
 
         if (count($boards) > 0) {
@@ -37,6 +38,25 @@ class BoardController extends Controller
             return view('boards.index', compact('boards'));
         }
     }
+
+
+    public function search(Request $request)
+    {
+
+        //검색기능 추가
+        $search = $request->input('search');
+
+        $boards = Board::where('title', 'Like', '%' . $request->search . '%')->orderByDesc('id')->paginate(5);
+
+        if (count($boards) > 0) {
+            return view('boards.index', compact('boards'))->withDetails($boards)->withQuery($search);
+        } else {
+            return view('boards.index', compact('boards'));
+        }
+    }
+
+
+
 
     /**
      * Show the form for creating a new resource.

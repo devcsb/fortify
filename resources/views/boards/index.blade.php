@@ -43,9 +43,9 @@
 
 
                   </div>
-                  <form action="{{ route('boards.index') }}" method="GET" role="search" class="col-md-4" style="margin:10px; float: right;">
+                  <form action="{{ route('boards.search') }}" method="GET" role="search" class="col-md-4" style="margin:10px; float: right;">
 
-                    <input type="text" class="form-control mr-2" name="search" placeholder="검색할 내용을 입력하세요" id="search" style="float:right">
+                    <input type="text" class="form-control mr-2" name="search" placeholder="검색할 내용을 입력하세요" value="{{ old('search') }}"id="search" style="float:right">
                     <div class="input-group">
                         <span class="input-group-btn mr-5 mt-1">
                             <button type="submit" title="Search projects">
