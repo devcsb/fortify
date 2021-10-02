@@ -19,8 +19,9 @@ class UpdateBoardRequest extends FormRequest
             'email' => 'required',
             'title' => 'required',
             'content' => 'required',
-            'file' => 'min:1',
+            'file' => 'nullable',
             'file.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'notice_flag' => 'nullable',
             //
         ];
     }

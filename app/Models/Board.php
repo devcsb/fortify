@@ -16,6 +16,7 @@ class Board extends Model
         'content',
         'file_name',
         'file_path',
+        'notice_flag',
     ];
 
     public function user()

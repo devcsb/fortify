@@ -25,7 +25,16 @@
                       </tr>
                     </thead>
                         <tbody>
-                            @foreach ($boards as $board)
+                          {{-- {{ dd([$boards,$notices]); }} --}}
+                          @foreach ($notices as $notice)
+                            <tr>
+                                <td style=>{{ "공지" }}</td>
+                                <td style="width: 60%"><a href="{{ route('boards.show', $notice->id) }}">{{ $notice->title }}</a></td>
+                                <td>{{ $notice->name }}</td>
+                                <td>{{ substr($notice->created_at,5,5) }}</td>
+                              </tr>
+                              @endforeach
+                          @foreach ($boards as $board)
                             <tr>
                                 <td>{{ $board->id }}</td>
                                 <td style="width: 60%"><a href="{{ route('boards.show', $board->id) }}">{{ $board->title }}</a></td>
@@ -34,14 +43,12 @@
                               </tr>
                               @endforeach
                         </tbody>
-                       {{-- {{ dd(request()->get('search')); }}  --}}
                       </table>
                     </div>
                     <a href="{{ route('boards.index') }}" style="float: right; margin: 15px;"><button>목록</button></a>
                     <a href="{{ route('boards.create') }}" style="float: right; margin-top: 15px;"><button>글쓰기</button></a>
                     <div class="col-md-4 style="margin:10px"> {{ $boards->withQueryString()->links('vendor.pagination.custom') }}</div>
-                   Total:{{$boards->total()}}
-
+                    
                   </div>
                   <form action="{{ route('boards.index') }}" method="GET" role="search" class="col-md-4" style="margin:10px; float: right;">
 

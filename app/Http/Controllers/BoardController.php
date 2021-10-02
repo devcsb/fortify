@@ -26,35 +26,19 @@ class BoardController extends Controller
     public function index(Request $request)
     {
 
+
+        $notices = Board::where('notice_flag', '=', 'Y')->orderBy('id')->paginate(10, ['*'], 'notice_page');
+
         $search = $request->input('search');
 
-        $boards = Board::where('title', 'Like', '%' . $request->search . '%')->orderByDesc('id')->paginate(5);
+        $boards = Board::where('title', 'Like', '%' . $request->search . '%')->orderByDesc('id')->paginate(5, ['*'], 'page');
 
         if (count($boards) > 0) {
-            return view('boards.index', compact('boards'))->withDetails($boards)->withQuery($search);
+            return view('boards.index', compact('boards', 'notices'))->withDetails([$boards, $notices])->withQuery($search);
         } else {
-            return view('boards.index', compact('boards'));
+            return view('boards.index', compact('boards', 'notices'));
         }
     }
-
-
-    public function search(Request $request)
-    {
-
-        //검색기능 추가
-        $search = $request->input('search');
-
-        $boards = Board::where('title', 'Like', '%' . $request->search . '%')->orderByDesc('id')->paginate(5);
-
-        if (count($boards) > 0) {
-            return view('boards.index', compact('boards'))->withDetails($boards)->withQuery($search);
-        } else {
-            return view('boards.index', compact('boards'));
-        }
-    }
-
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -81,30 +65,37 @@ class BoardController extends Controller
         $validated = $request->validated();
 
 
-        //파일명 변경
+        //파일명 변경위한 패턴 정의
         $pattern = '/[@\,\?\*\.\;\!\$\#\%\^\&\(\)\-\=\+\`\~\" "]+/';
 
-
-
-        $origin_name_arr = explode('.', $validated['file']->getClientOriginalName());
-        $origin_name = array_shift($origin_name_arr);
-        $convert_name = preg_replace($pattern, '', $origin_name);
-
-
-        //확장자 제어
-        $ext = array_pop($origin_name_arr);
-        $banned_ext = array('php', 'phps', 'php3', 'php4', 'php5', 'php7', 'pht', 'phtml', 'htaccess', 'html', 'htm', 'inc');
-        if (in_array($ext, $banned_ext)) {
-            abort(403, '이 확장자를 가진 파일은 업로드 할 수 없습니다.');
-        }
+        $notice_falg = $request->notice_flag;
+        if ($request->notice_flag !== 'Y') {
+            $notice_falg = 'N';
+        };
 
         $board = new Board([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'title' => $validated['title'],
             'content' => $validated['content'],
+            'notice_flag' => $notice_falg,     //input 받은 값이 null일 경우, validation Form Request에서 반환받은 값으로는 접근 불가하므로 request에서 직접 가져다쓴다.(배열에 없는 값이므로)
         ]);
+
         if ($request->hasFile('file')) {
+
+            //이름변경 작업
+            $origin_name_arr = explode('.', $validated['file']->getClientOriginalName());
+            $origin_name = array_shift($origin_name_arr);
+            $convert_name = preg_replace($pattern, '', $origin_name);
+
+
+            //확장자 제어
+            $ext = array_pop($origin_name_arr);
+            $banned_ext = array('php', 'phps', 'php3', 'php4', 'php5', 'php7', 'pht', 'phtml', 'htaccess', 'html', 'htm', 'inc');
+            if (in_array($ext, $banned_ext)) {
+                abort(403, '이 확장자를 가진 파일은 업로드 할 수 없습니다.');
+            }
+
             $fileName = time() . '_' . $validated['name'] . '_' . $convert_name;
             $filePath = $validated['file']->storeAs('uploads', $fileName, 'public'); // storeAs($path, $name, $disk); 세번째 $disk는 옵션. $disk에는 filesystems.php에서 정의한 disk를 선택
             $board->file_name = $fileName;

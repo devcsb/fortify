@@ -29,6 +29,10 @@
                             <td class="td_left"><label for="file">파일 첨부</label></td>
                             <td class="td_right"><input type="file" name="file"/></td>
                         </tr>
+                        <tr>
+                            <td class="td_left"></td>
+                            <td class="td_right">공지글 설정<input type="checkbox" name="notice_flag" value="Y"></td>
+                        </tr>
                     </table>
                     <section id="commandCell">
                        <input type="reset" value="다시쓰기" style="float: right; margin-right: 10px;" /><input type="submit" value="등록" style="float: right; margin-right: 10px;">
