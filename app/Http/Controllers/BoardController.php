@@ -25,13 +25,17 @@ class BoardController extends Controller
 
     public function index(Request $request)
     {
+        $search = $request->input('search');
 
 
         $notices = Board::where('notice_flag', '=', 'Y')->orderBy('id')->paginate(10, ['*'], 'notice_page');
+        $boards = Board::where('title', 'Like', '%' . $request->search . '%')->orderByDesc('id')->paginate(10, ['*'], 'page');
 
-        $search = $request->input('search');
-
-        $boards = Board::where('title', 'Like', '%' . $request->search . '%')->orderByDesc('id')->paginate(5, ['*'], 'page');
+        //공지 1페이지에만 나오게 & 페이징 갯수에 공지글 포함
+        // $boards = Board::where('title', 'Like', '%' . $request->search . '%')
+        //     ->orderByRaw('FIELD(notice_flag,"Y","N")')
+        //     ->orderByDesc('id')
+        //     ->paginate(10);
 
         if (count($boards) > 0) {
             return view('boards.index', compact('boards', 'notices'))->withDetails([$boards, $notices])->withQuery($search);

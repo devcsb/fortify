@@ -37,6 +37,7 @@ class BoardFactory extends Factory
             'content' => function ($callback) {
                 return $callback['name'] . "님이 쓴 글 내용/" . $this->faker->sentence(50) . $this->faker->regexify('[A-Za_z0-9._%+-]{3,12}');
             },
+            'notice_flag' => 'N',
             // 'file_name' => $this->faker->sentence(15),
             // 'file_path' => $this->faker->sentence(15),
 

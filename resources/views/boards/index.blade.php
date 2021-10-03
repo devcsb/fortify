@@ -25,23 +25,29 @@
                       </tr>
                     </thead>
                         <tbody>
-                          {{-- {{ dd([$boards,$notices]); }} --}}
                           @foreach ($notices as $notice)
                             <tr>
-                                <td style=>{{ "공지" }}</td>
+                                <td style="font-weight: bold">{{ "공지" }}</td>
                                 <td style="width: 60%"><a href="{{ route('boards.show', $notice->id) }}">{{ $notice->title }}</a></td>
                                 <td>{{ $notice->name }}</td>
                                 <td>{{ substr($notice->created_at,5,5) }}</td>
                               </tr>
                               @endforeach
+
+                              {{-- 1페이지에만 공지 나오는 방식 --}}
                           @foreach ($boards as $board)
                             <tr>
-                                <td>{{ $board->id }}</td>
+                              {{-- @if($board->notice_flag =="Y")
+                                <td style="font-weight: bold" >{{ "공지" }}</td>
+                              @else --}}
+                              <td>{{ $board->id }}</td>
+                              {{-- @endif   --}}
                                 <td style="width: 60%"><a href="{{ route('boards.show', $board->id) }}">{{ $board->title }}</a></td>
                                 <td>{{ $board->name }}</td>
                                 <td>{{ substr($board->created_at,5,5) }}</td>
                               </tr>
                               @endforeach
+
                         </tbody>
                       </table>
                     </div>
