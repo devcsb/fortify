@@ -100,6 +100,9 @@ class BoardController extends Controller
                 abort(403, '이 확장자를 가진 파일은 업로드 할 수 없습니다.');
             }
 
+            //파일명에 확장자 붙여주기
+            $convert_name = $convert_name . "." . $ext;
+
             $fileName = time() . '_' . $validated['name'] . '_' . $convert_name;
             $filePath = $validated['file']->storeAs('uploads', $fileName, 'public'); // storeAs($path, $name, $disk); 세번째 $disk는 옵션. $disk에는 filesystems.php에서 정의한 disk를 선택
             $board->file_name = $fileName;
@@ -164,6 +167,7 @@ class BoardController extends Controller
         //위 코드를 abort_if 헬퍼함수로 한줄로 요약
         // abort_if($board->email !== auth()->email(), 403);
 
+
         //Policy 사용한 권한제어 // 책 366p. 첫번 째 파라미터로 어빌리티명, 두 번째로 객체를 받는 authorize()함수
         $this->authorize('update', $board);
 
@@ -186,21 +190,48 @@ class BoardController extends Controller
             $board->file_path = null;
         }
 
+        //파일명 변경위한 패턴 정의
+        $pattern = '/[@\,\?\*\.\;\!\$\#\%\^\&\(\)\-\=\+\`\~\" "]+/';
+
         if ($request->hasFile('file')) {
+
             if (File::exists(public_path() . '/storage/uploads/' . $board['file_name'])) {
                 File::delete(public_path() . '/storage/uploads/' . $board['file_name']);
             }
 
-            $fileName = time() . '_' . $validated['file']->getClientOriginalName();
+            //이름변경 작업
+            $origin_name_arr = explode('.', $validated['file']->getClientOriginalName());
+            $origin_name = array_shift($origin_name_arr);
+            $convert_name = preg_replace($pattern, '', $origin_name);
+
+
+            //확장자 제어
+            $ext = array_pop($origin_name_arr);
+            $banned_ext = array('php', 'phps', 'php3', 'php4', 'php5', 'php7', 'pht', 'phtml', 'htaccess', 'html', 'htm', 'inc');
+            if (in_array($ext, $banned_ext)) {
+                abort(403, '이 확장자를 가진 파일은 업로드 할 수 없습니다.');
+            }
+
+            //파일명에 확장자 붙여주기
+            $convert_name = $convert_name . "." . $ext;
+
+            $fileName = time() . '_' . $validated['name'] . '_' . $convert_name;
             $filePath = $validated['file']->storeAs('uploads', $fileName, 'public'); // storeAs($path, $name, $disk); 세번째 $disk는 옵션. $disk에는 filesystems.php에서 정의한 disk를 선택
             $board->file_name = $fileName;
             $board->file_path = $filePath;
         }
 
+
+
+
+
+
+
         $board->save();
 
         return redirect()->route('boards.show', $board->id);
     }
+
 
     /**
      * Remove the specified resource from storage.

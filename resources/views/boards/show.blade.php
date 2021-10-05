@@ -21,7 +21,6 @@
                   </table>
                   내용: {{ $board->content }}
                   <div style="margin-top:50px">
-                    {{-- {{ dd(isset($board->file_path)) }} --}}
                   @if (isset($board->file_path))
                     
                   <img src="{{asset('storage/'.$board->file_path)}}" alt="첨부파일" title="첨부파일" style="width: 50%; height: 50%">
