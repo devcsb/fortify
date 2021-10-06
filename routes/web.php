@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\BoardController;
+use App\Http\Controllers\WorknetController;
 use \App\Http\Controllers\GoogleLoginController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +32,6 @@ Route::view('profile/password/edit', 'profile.password.edit')->name('profile.pas
 
 Route::get('google/login', [GoogleLoginController::class, 'redirect']);
 Route::get('google/callback', [GoogleLoginController::class, 'callback']);
+
+
+Route::get("worknets", [WorknetController::class, "index"])->name('worknets.index');
