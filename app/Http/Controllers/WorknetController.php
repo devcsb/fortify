@@ -2,48 +2,61 @@
 
 namespace App\Http\Controllers;
 
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Http;
 
 class WorknetController extends Controller
 {
-    public function paginate($items, $perPage = 10, $page = null, $options = [])
+
+    public function paginate($total, $items, $perPage = 10, $page = null, $options = [])
     {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof Collection ? $items : Collection::make($items);
-        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
+        return new LengthAwarePaginator($items, $total, $perPage, $page, $options);
     }
 
     public function index(Request $request)
     {
-        // dd($request->parameters[]);
-        // dd($request->all());
-        // dd($request->get('page'));
         $page = $request->get('page');
         $search = $request->input('search');
+        $url = "http://openapi.work.go.kr/opi/opi/opia/wantedApi.do?authKey=WNJMLNKRTD2G7YSC0I5AA2VR1HJ&callTp=L&returnType=XML&startPage=" . $page . "&display=10&keyword=" . $search;
 
-        $url = "http://openapi.work.go.kr/opi/opi/opia/wantedApi.do?authKey=WNJMLNKRTD2G7YSC0I5AA2VR1HJ&callTp=L&returnType=XML&startPage=" . $page . "&display=100&keyword=" . $search . "";
-
-        $XmlDataString = file_get_contents($url);
-        $xmlObject = simplexml_load_string($XmlDataString);
-
-        $json = json_encode($xmlObject);
+        // $XmlDataString = file_get_contents($url);  //Guzzle로 대체하였음.
+        $response = Http::get($url);
+        // $client = new Client();
+        // $response = $client->get($url);
+        // dd($response->getBody());
+        // $content = $response->getBody();    //여기까지 file_get_contents($url);로 가져온 과 같음. xml형식
+        $xmlObject = simplexml_load_string($response->body());   //XML 문자열을 XML 객체로 변환
+        $json = json_encode($xmlObject);    //xml형식 객체를 json으로 변환(xml문자열을 곧바로 json_encode할 수 없다. 객체로 변환 후 json으로 변환해야 함)
         $DataArr = json_decode($json, true);
         $worknets = $DataArr['wanted'];
-        // dd($DataArr);
-        // foreach ($worknets as $worknet)
-        $search_value = array_search($search, array_column($worknets, '학원'));
-        // dd($search_value);
-        // dd($worknets[$search_value]);
-        // dd($search_value);
-
-        $worknets = $this->paginate($worknets);
+        // dd($worknets);
+        $total = $DataArr['total'];
+        $worknets = $this->paginate($total, $worknets);
         $worknets->withPath('worknets');
+        // $DataArr = json_decode(json_encode(simplexml_load_string($response->body())), true);
+
+
+        return view('worknets.index', compact('worknets'));
+    }
+
+    public function show($authNum)
+    {
+        $detail_url = "http://openapi.work.go.kr/opi/opi/opia/wantedApi.do?authKey=WNJMLNKRTD2G7YSC0I5AA2VR1HJ&callTp=D&returnType=XML&wantedAuthNo=" . $authNum . "&infoSvc=VALIDATION";
+        $client = new Client();
+        $response = $client->get($detail_url);
+        $content = $response->getBody();
+        $xmlObject = simplexml_load_string($content);
+        $json = json_encode($xmlObject);
+        $worknets = json_decode($json, true);
 
 
 
-        return view('worknets.index', compact('worknets'))->withDetails([$worknets])->withQuery($search_value);
+        return view('worknets.show', compact('worknets', 'authNum'));
     }
 }

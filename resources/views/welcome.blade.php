@@ -46,6 +46,7 @@
                     <div style="color: rgb(40, 50, 141)"> fortify</div>
                     <div class="col-md-6 offset-md-4">
                     <a href="{{ route('boards.index') }}" class="btn btn-xs btn-info pull-right">글 목록</a>
+                    <a href="{{ route('worknets.index') }}" class="btn btn-xs btn-info pull-right">워크넷</a>
                     </div>
                     <div class="flex justify-center pt-8 sm:justify-start sm:pt-0">
                         <svg viewBox="0 0 651 192" fill="none" xmlns="http://www.w3.org/2000/svg" class="h-16 w-auto text-gray-700 sm:h-20">

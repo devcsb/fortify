@@ -53,7 +53,7 @@
                     </div>
                     <a href="{{ route('boards.index') }}" style="float: right; margin: 15px;"><button>목록</button></a>
                     <a href="{{ route('boards.create') }}" style="float: right; margin-top: 15px;"><button>글쓰기</button></a>
-                    <div class="col-md-4 style="margin:10px"> {{ $boards->withQueryString()->links('vendor.pagination.custom') }}</div>
+                    <div class="col-md-4" style="margin:10px"> {{ $boards->withQueryString()->links('vendor.pagination.custom') }}</div>
                     
                   </div>
                   <form action="{{ route('boards.index') }}" method="GET" role="search" class="col-md-4" style="margin:10px; float: right;">

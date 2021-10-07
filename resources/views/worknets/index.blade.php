@@ -2,10 +2,6 @@
 
 @section('content')
 
-    
-        
-            
-                
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                       <tr>
@@ -31,23 +27,28 @@
                     </thead>
                         <tbody>
 
+                          {{-- @if(is_array($worknets)) --}}
+                          {{-- {{ dd($worknets) }} --}}
                           @foreach ($worknets as $worknet)
                             <tr>
+                              {{-- {{ $worknet->company }} --}}
                               <td>{{ $worknet['company'] }}</td>
-                                <td style="width: 45%"><a href="{{ route('boards.show', $worknet['wantedAuthNo']) }}">{{ $worknet['title'] }}</a></td>
+                                <td style="width: 45%"><a href="{{ route('worknets.show', $worknet['wantedAuthNo']) }}">{{ $worknet['title'] }}</a></td>
                                 <td>{{ $worknet['sal'] }}</td>
                                 <td>{{ $worknet['basicAddr'] }}</td>
                                 <td>{{ substr($worknet['regDt'],3,5) }}</td>
                                 <td>{{ substr($worknet['closeDt'],3,5) }}</td>
+                                {{-- <td>{{ $worknet['wantedMobileInfoUrl'] }}</td> --}}
                               </tr>
                               @endforeach
+                              {{-- @endif --}}
 
                         </tbody>
                       </table>
                     
                     <a href="{{ route('boards.index') }}" style="float: right; margin: 15px;"><button>목록</button></a>
                     <a href="{{ route('boards.create') }}" style="float: right; margin-top: 15px;"><button>글쓰기</button></a>
-                    <div class="col-md-4 style="margin:10px"> {{ $worknets->links('vendor.pagination.custom') }}</div>
+                    <div class="col-md-4" style="margin:10px">{{ $worknets->withQueryString()->links('vendor.pagination.custom') }}</div>
                     
                   <form action="{{ route('worknets.index') }}" method="GET" role="search" class="col-md-4" style="margin:10px; float: right;">
 

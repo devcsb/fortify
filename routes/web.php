@@ -35,3 +35,4 @@ Route::get('google/callback', [GoogleLoginController::class, 'callback']);
 
 
 Route::get("worknets", [WorknetController::class, "index"])->name('worknets.index');
+Route::get("worknets/{worknet}", [WorknetController::class, "show"])->name('worknets.show');

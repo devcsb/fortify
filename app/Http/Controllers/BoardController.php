@@ -222,11 +222,6 @@ class BoardController extends Controller
         }
 
 
-
-
-
-
-
         $board->save();
 
         return redirect()->route('boards.show', $board->id);
