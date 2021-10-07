@@ -19,6 +19,7 @@
                       </tr>
                     </thead>
                   </table>
+
                   <p>직무 내용: {{ $worknets['wantedInfo']['jobCont'] }}</p>
                   <p><a href="{{ url('https://www.work.go.kr/empInfo/empInfoSrch/detail/empDetailAuthView.do?searchInfoType=VALIDATION&callPage=detail&wantedAuthNo='.$authNum.'&rtnTarget=list1#none') }}" download>worknet 원문</a>
 
@@ -44,8 +45,8 @@
                 <tbody>
                   <tr>
                     <td>
-                      {{ $worknets['wantedInfo']['enterTpNm'] }}
-                    </td>
+
+                      {{ $worknets['wantedInfo']['enterTpNm'] }}</td>
                     <td>
                       {{ $worknets['wantedInfo']['eduNm'] }}
                     </td>

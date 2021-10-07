@@ -28,10 +28,11 @@
                         <tbody>
 
                           {{-- @if(is_array($worknets)) --}}
-                          {{-- {{ dd($worknets) }} --}}
+                          {{ dd($worknets) }}
                           @foreach ($worknets as $worknet)
                             <tr>
-                              {{-- {{ $worknet->company }} --}}
+                              {{-- {{ dd($worknets); }} --}}
+                              {{-- {{ dd($worknet->company); }} --}}
                               <td>{{ $worknet['company'] }}</td>
                                 <td style="width: 45%"><a href="{{ route('worknets.show', $worknet['wantedAuthNo']) }}">{{ $worknet['title'] }}</a></td>
                                 <td>{{ $worknet['sal'] }}</td>
