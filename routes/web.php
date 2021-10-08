@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\BoardController;
 use App\Http\Controllers\WorknetController;
 use \App\Http\Controllers\GoogleLoginController;
-
+use \App\Http\Controllers\NaverLoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,10 +29,11 @@ Route::view('profile/edit', 'profile.edit')->name('profile.edit')->middleware('a
 
 Route::view('profile/password/edit', 'profile.password.edit')->name('profile.password.edit')->middleware('auth');  //컨벤션 질문 passwordEdit
 
+Route::get("worknets", [WorknetController::class, "index"])->name('worknets.index');
+Route::get("worknets/{worknet}", [WorknetController::class, "show"])->name('worknets.show');
 
 Route::get('google/login', [GoogleLoginController::class, 'redirect']);
 Route::get('google/callback', [GoogleLoginController::class, 'callback']);
 
-
-Route::get("worknets", [WorknetController::class, "index"])->name('worknets.index');
-Route::get("worknets/{worknet}", [WorknetController::class, "show"])->name('worknets.show');
+Route::get('naver/login', [NaverLoginController::class, 'redirect']);
+Route::get('naver/callback', [NaverLoginController::class, 'callback']);
