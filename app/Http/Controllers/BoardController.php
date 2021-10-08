@@ -194,7 +194,6 @@ class BoardController extends Controller
         $pattern = '/[@\,\?\*\.\;\!\$\#\%\^\&\(\)\-\=\+\`\~\" "]+/';
 
         if ($request->hasFile('file')) {
-
             if (File::exists(public_path() . '/storage/uploads/' . $board['file_name'])) {
                 File::delete(public_path() . '/storage/uploads/' . $board['file_name']);
             }
