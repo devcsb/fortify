@@ -26,13 +26,14 @@
                       </tr>
                     </thead>
                         <tbody>
-
-                          {{-- @if(is_array($worknets)) --}}
-                          {{ dd($worknets) }}
+                          {{-- 코드 개선 필요 --}}
+                          {{ $message }}
+                          @if(@isset($worknets))
                           @foreach ($worknets as $worknet)
+                          @if($total ==1)
+                          {{ $worknet = $worknets }}
+                          @endif
                             <tr>
-                              {{-- {{ dd($worknets); }} --}}
-                              {{-- {{ dd($worknet->company); }} --}}
                               <td>{{ $worknet['company'] }}</td>
                                 <td style="width: 45%"><a href="{{ route('worknets.show', $worknet['wantedAuthNo']) }}">{{ $worknet['title'] }}</a></td>
                                 <td>{{ $worknet['sal'] }}</td>
@@ -41,18 +42,21 @@
                                 <td>{{ substr($worknet['closeDt'],3,5) }}</td>
                                 {{-- <td>{{ $worknet['wantedMobileInfoUrl'] }}</td> --}}
                               </tr>
+                              @if($total ==1)
+                              @break 
+                              @endif
                               @endforeach
-                              {{-- @endif --}}
+                              @endif
+                              
 
                         </tbody>
                       </table>
                     
-                    <a href="{{ route('boards.index') }}" style="float: right; margin: 15px;"><button>목록</button></a>
-                    <a href="{{ route('boards.create') }}" style="float: right; margin-top: 15px;"><button>글쓰기</button></a>
+                    <a href="{{ route('worknets.index') }}" style="float: right; margin: 15px;"><button>목록</button></a>
+                    @if(@isset($worknets)) 
                     <div class="col-md-4" style="margin:10px">{{ $worknets->withQueryString()->links('vendor.pagination.custom') }}</div>
-                    
+                    @endif
                   <form action="{{ route('worknets.index') }}" method="GET" role="search" class="col-md-4" style="margin:10px; float: right;">
-
                     <input type="text" class="form-control mr-2" name="search" placeholder="검색할 내용을 입력하세요" value="{{ $search = request()->get('search') }}"id="search" style="float:right">
                     <div class="input-group">
                         <span class="input-group-btn mr-5 mt-1">

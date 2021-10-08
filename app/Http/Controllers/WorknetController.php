@@ -22,26 +22,36 @@ class WorknetController extends Controller
 
     public function index(Request $request)
     {
-        $page = $request->get('page');
         $search = $request->input('search');
-        $url = "http://openapi.work.go.kr/opi/opi/opia/wantedApi.do";
+        $page = $request->get('page');
         
-        $var = "?authKey=WNJMLNKRTD2G7YSC0I5AA2VR1HJ&callTp=L&returnType=XML&startPage=" . $page . "&display=10&keyword=" . $search;
+        $url = "http://openapi.work.go.kr/opi/opi/opia/wantedApi.do";
+
+        $default_var = "?authKey=WNJMLNKRTD2G7YSC0I5AA2VR1HJ&callTp=L&returnType=XML&startPage=" . $page . "&display=10";
+        $addisonal_var =
+        ["keyword" => "&keyword=".$search,
+        ];
 
 
-        $response = Http::get($url.$var);
+        $response = Http::get($url.$default_var.$addisonal_var['keyword']);
         $xmlObject = simplexml_load_string($response->body());   //XML 문자열을 XML 객체로 변환
         $json = json_encode($xmlObject);    //xml형식 객체를 json으로 변환(xml문자열을 곧바로 json_encode할 수 없다. 객체로 변환 후 json으로 변환해야 함)
         $DataArr = json_decode($json, true);
+
+        // $DataArr = json_decode(json_encode(simplexml_load_string($response->body())), true);
+
+        if (isset($DataArr['messageCd'])) {
+            $message = "검색조건에 일치하는 결과가 없습니다.";
+            return view('worknets.index', compact('message'));
+        } else {
+        }
         $worknets = $DataArr['wanted'];
-        // dd($worknets);
         $total = $DataArr['total'];
         $worknets = $this->paginate($total, $worknets);
         $worknets->withPath('worknets');
-        // $DataArr = json_decode(json_encode(simplexml_load_string($response->body())), true);
+        $message = "총 ".$total."건의 결과가 검색되었습니다.";
 
-
-        return view('worknets.index', compact('worknets'));
+        return view('worknets.index', compact('worknets', 'message', 'total'));
     }
 
     public function show($authNum)
@@ -49,10 +59,8 @@ class WorknetController extends Controller
         $detail_url = "http://openapi.work.go.kr/opi/opi/opia/wantedApi.do";
         $detail_var ="?authKey=WNJMLNKRTD2G7YSC0I5AA2VR1HJ&callTp=D&returnType=XML&wantedAuthNo=" . $authNum . "&infoSvc=VALIDATION";
         $response = Http::get($detail_url.$detail_var);
-        $client = new Client();
-        $response = $client->get($detail_url);
-        $content = $response->getBody();
-        $xmlObject = simplexml_load_string($content);
+        
+        $xmlObject = simplexml_load_string($response);
         $json = json_encode($xmlObject);
         $worknets = json_decode($json, true);
 
