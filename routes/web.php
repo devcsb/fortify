@@ -3,8 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\BoardController;
 use App\Http\Controllers\WorknetController;
-use \App\Http\Controllers\GoogleLoginController;
-use \App\Http\Controllers\NaverLoginController;
+use App\Http\Controllers\Auth\KakaoLoginController;
+use App\Http\Controllers\Auth\NaverLoginController;
+use App\Http\Controllers\Auth\GoogleLoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,8 +33,11 @@ Route::view('profile/password/edit', 'profile.password.edit')->name('profile.pas
 Route::get("worknets", [WorknetController::class, "index"])->name('worknets.index');
 Route::get("worknets/{worknet}", [WorknetController::class, "show"])->name('worknets.show');
 
-Route::get('google/login', [GoogleLoginController::class, 'redirect']);
+Route::get('google/login', [GoogleLoginController::class, 'redirect'])->name('google.login');
 Route::get('google/callback', [GoogleLoginController::class, 'callback']);
 
-Route::get('naver/login', [NaverLoginController::class, 'redirect']);
+Route::get('naver/login', [NaverLoginController::class, 'redirect'])->name('naver.login');
 Route::get('naver/callback', [NaverLoginController::class, 'callback']);
+
+Route::get('kakao/login', [KakaoLoginController::class, 'redirect'])->name('kakao.login');
+Route::get('kakao/callback', [KakaoLoginController::class, 'callback']);
