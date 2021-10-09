@@ -63,6 +63,16 @@
                                     </a>
                                 @endif
                             </div>
+                            <div class="col-md-8 offset-md-4">
+                                <a href="{{ route('naver.login') }}">
+                                    <img src="public\naver.png" style="width: 20%" alt="네이버 로고">
+                                </a>
+                            </div>
+                            <div class="col-md-8 offset-md-4">
+                                <a href="{{ route('kakao.login') }}">
+                                    <img src="public\kakao.png" style="width: 20%" alt="카카오 로고">
+                                </a>
+                            </div>
                         </div>
                     </form>
                 </div>

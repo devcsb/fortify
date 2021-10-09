@@ -34,8 +34,9 @@ class WorknetController extends Controller
             'returnType' => 'XML',
             'startPage' => $page,
             'display' => '10',
-            'keywork' => $search,
+            'keyword' => $search,
         ]);
+
         $xmlObject = simplexml_load_string($response->body());   //XML 문자열을 XML 객체로 변환
         $json = json_encode($xmlObject);  //xml형식 객체를 json으로 변환(xml문자열을 곧바로 json_encode할 수 없다. 객체로 변환 후 json으로 변환해야 함)
         $DataArr = json_decode($json, true);

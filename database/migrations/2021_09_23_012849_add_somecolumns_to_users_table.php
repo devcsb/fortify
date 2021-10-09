@@ -16,10 +16,10 @@ class AddSomecolumnsToUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             //gender, phone_number 추가
             $table->string('gender')
-                ->after('password');
+                ->after('password')->nullable();
 
             $table->string('phone')
-                ->after('gender');
+                ->after('gender')->nullable();
         });
     }
 

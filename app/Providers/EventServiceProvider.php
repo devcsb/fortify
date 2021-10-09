@@ -23,11 +23,9 @@ class EventServiceProvider extends ServiceProvider
             // ... other providers
             \SocialiteProviders\Google\GoogleExtendSocialite::class.'@handle',
             \SocialiteProviders\Naver\NaverExtendSocialite::class.'@handle',
-        ],
-
-        \SocialiteProviders\Manager\SocialiteWasCalled::class => [
-            // ... other providers
-            \SocialiteProviders\Naver\NaverExtendSocialite::class.'@handle',
+            \SocialiteProviders\Kakao\KakaoExtendSocialite::class.'@handle',
+            \SocialiteProviders\Facebook\FacebookExtendSocialite::class.'@handle',
+            \SocialiteProviders\Twitter\TwitterExtendSocialite::class.'@handle',
         ],
 
     ];
