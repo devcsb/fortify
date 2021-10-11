@@ -37,7 +37,9 @@ class NaverLoginController extends Controller
             $user = Socialite::driver('naver')->user();
       
             $finduser = User::where('social_id', $user->id)->first();
-            if (!$finduser) {
+            $existingUser = User::where('email', $user->getEmail())->first();
+            // dd($existingUser);
+            if (!$finduser && !$existingUser) {
                 $newUser = User::create([
                     'name' => $user->name,
                     'email' => $user->email,
@@ -49,6 +51,11 @@ class NaverLoginController extends Controller
                 Auth::login($newUser);
       
                 return redirect('/home');
+            } elseif ($existingUser) {
+                //소셜로그인한 email주소가 기존 사용자의 email주소와 일치할 경우
+                
+                // dd($existingUser);
+                return redirect()->route('socialogin.receive', $existingUser);
             } else {
                 // Auth::login($finduser);
                 auth()->login($finduser, true);

@@ -33,6 +33,9 @@ Route::view('profile/password/edit', 'profile.password.edit')->name('profile.pas
 Route::get("worknets", [WorknetController::class, "index"])->name('worknets.index');
 Route::get("worknets/{worknet}", [WorknetController::class, "show"])->name('worknets.show');
 
+//이메일중복시 사용자로부터 입력값 받기
+Route::view('auth/receive_email', 'auth.receive_email')->name('socialogin.receive');
+
 Route::get('google/login', [GoogleLoginController::class, 'redirect'])->name('google.login');
 Route::get('google/callback', [GoogleLoginController::class, 'callback']);
 
