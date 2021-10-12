@@ -6,14 +6,20 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('사용하실 이메일 주소 입력') }}</div>
-                {{ dd(request()) }}
                 <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
+                    @if(request('social_type')=='naver')
+                    <form method="POST" action="{{ route('naver.receive') }}">
+                    @elseif(request('social_type')=='kakao')
+                    <form method="POST" action="{{ route('kakao.receive') }}">
+                    @endif
                         @csrf
 
                         <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('이메일 주소') }}</label>
+                            <input type="hidden" name="name" value="{{ request('name') }}">
+                            <input type="hidden" name="id" value="{{ request('id') }}">
 
+                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('이메일 주소') }}</label>
+                            
                             <div class="col-md-6">
                                 <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 

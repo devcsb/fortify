@@ -40,7 +40,9 @@ Route::get('google/login', [GoogleLoginController::class, 'redirect'])->name('go
 Route::get('google/callback', [GoogleLoginController::class, 'callback']);
 
 Route::get('naver/login', [NaverLoginController::class, 'redirect'])->name('naver.login');
+Route::post('naver/login', [NaverLoginController::class, 'receiveEmail'])->name('naver.receive');
 Route::get('naver/callback', [NaverLoginController::class, 'callback']);
 
 Route::get('kakao/login', [KakaoLoginController::class, 'redirect'])->name('kakao.login');
+Route::post('kakao/login', [KakaoLoginController::class, 'receiveEmail'])->name('kakao.receive');
 Route::get('kakao/callback', [KakaoLoginController::class, 'callback']);
