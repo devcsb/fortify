@@ -246,4 +246,8 @@ class BoardController extends Controller
 
         return redirect()->route('boards.index');
     }
+
+    public function test()
+    {
+    }
 }

@@ -31,13 +31,13 @@ class KakaoLoginController extends Controller
         try {
             // Create a new user in our database
             $user = Socialite::driver('kakao')->user();
-      
+
             $finduser = User::where('social_id', $user->getId())->first();
             $existingUser = User::where('email', $user->getEmail())->first();
 
-            $id=$user->id;
-            $name=$user->name;
-            $social_type='kakao';
+            $id = $user->id;
+            $name = $user->name;
+            $social_type = 'kakao';
 
             if (!$finduser) {
                 if (!$existingUser) {
@@ -45,22 +45,22 @@ class KakaoLoginController extends Controller
                         'name' => $user->name,
                         'email' => $user->email,
                         'email_verified_at' => now(),
-                        'social_id'=> $user->id,
-                        'social_type'=> 'kakao',
+                        'social_id' => $user->id,
+                        'social_type' => 'kakao',
                     ]);
-         
+
                     Auth::login($newUser);
-          
+
                     return redirect('/home');
                 } else {
                     //소셜로그인한 email주소가 기존 사용자의 email주소와 일치할 경우
-                    
+
                     return redirect()->route('socialogin.receive', compact('id', 'name', 'social_type'));
                 }
             } else {
                 // Auth::login($finduser);
                 auth()->login($finduser, true);
-                     
+
                 return redirect('/home');
             }
         } catch (Exception $e) {
@@ -74,8 +74,8 @@ class KakaoLoginController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'email_verified_at' => now(),
-            'social_id'=> $request->id,
-            'social_type'=> 'kakao',
+            'social_id' => $request->id,
+            'social_type' => 'kakao',
         ]);
 
         Auth::login($newUser);

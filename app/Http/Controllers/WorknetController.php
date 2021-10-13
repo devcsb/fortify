@@ -15,9 +15,9 @@ class WorknetController extends Controller
     public function paginate($total, $items, $perPage = 10, $page = null, $options = [])
     {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
-        
+
         $items = $items instanceof Collection ? $items : Collection::make($items);
-        
+
         return new LengthAwarePaginator($items, $total, $perPage, $page, $options);
     }
 
@@ -25,7 +25,7 @@ class WorknetController extends Controller
     {
         $search = $request->input('search');
         $page = $request->get('page');
-        
+
 
 
         $response = Http::get($this->url, [
@@ -52,7 +52,7 @@ class WorknetController extends Controller
         $total = $DataArr['total'];
         $worknets = $this->paginate($total, $worknets);
         $worknets->withPath('worknets');
-        $message = "총 ".$total."건의 결과가 검색되었습니다.";
+        $message = "총 " . $total . "건의 결과가 검색되었습니다.";
 
         return view('worknets.index', compact('worknets', 'message', 'total'));
     }
@@ -66,7 +66,7 @@ class WorknetController extends Controller
             'wantedAuthNo' => $authNum,
             'infoSvc' => 'VALIDATION',
         ]);
-        
+
         $xmlObject = simplexml_load_string($response);
         $json = json_encode($xmlObject);
         $worknets = json_decode($json, true);

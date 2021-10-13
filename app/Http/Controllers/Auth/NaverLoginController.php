@@ -10,7 +10,7 @@ use Laravel\Socialite\Facades\Socialite;
 
 class NaverLoginController extends Controller
 {
-    
+
 
     /**
      * 주어진 provider에 대하여 소셜 응답을 처리합니다.
@@ -27,8 +27,8 @@ class NaverLoginController extends Controller
 
     public function callback()
     {
-        
-        
+
+
         //Log the user in
 
         // Redirect to dashboard
@@ -38,32 +38,32 @@ class NaverLoginController extends Controller
             $finduser = User::where('social_id', $user->getId())->first();
             $existingUser = User::where('email', $user->getEmail())->first();
 
-            $id=$user->user['response']['id'];
-            $name=$user->user['response']['name'];
-            $social_type='naver';
-            
+            $id = $user->user['response']['id'];
+            $name = $user->user['response']['name'];
+            $social_type = 'naver';
+
             if (!$finduser) {
                 if (!$existingUser) {
                     $newUser = User::create([
                         'name' => $user->name,
                         'email' => $user->email,
                         'email_verified_at' => now(),
-                        'social_id'=> $user->id,
-                        'social_type'=> 'naver',
+                        'social_id' => $user->id,
+                        'social_type' => 'naver',
                     ]);
-         
+
                     Auth::login($newUser);
-          
+
                     return redirect('/home');
                 } else {
                     //소셜로그인한 email주소가 기존 사용자의 email주소와 일치할 경우
-                    
+
                     return redirect()->route('socialogin.receive', compact('id', 'name', 'social_type'));
                 }
             } else {
                 // Auth::login($finduser);
                 auth()->login($finduser, true);
-                     
+
                 return redirect('/home');
             }
         } catch (Exception $e) {
@@ -78,8 +78,8 @@ class NaverLoginController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'email_verified_at' => now(),
-            'social_id'=> $request->id,
-            'social_type'=> 'naver',
+            'social_id' => $request->id,
+            'social_type' => 'naver',
         ]);
 
         Auth::login($newUser);

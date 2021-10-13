@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use \App\Http\Controllers\BoardController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BoardController;
 use App\Http\Controllers\WorknetController;
 use App\Http\Controllers\Auth\KakaoLoginController;
 use App\Http\Controllers\Auth\NaverLoginController;
@@ -46,3 +47,6 @@ Route::get('naver/callback', [NaverLoginController::class, 'callback']);
 Route::get('kakao/login', [KakaoLoginController::class, 'redirect'])->name('kakao.login');
 Route::post('kakao/login', [KakaoLoginController::class, 'receiveEmail'])->name('kakao.receive');
 Route::get('kakao/callback', [KakaoLoginController::class, 'callback']);
+
+Route::delete('admin/delete', [AdminController::class, 'delete'])->name('admin.delete');
+Route::delete('admin/deleteSelected', [AdminController::class, 'deleteSelected'])->name('admin.deleteSelected');
