@@ -50,3 +50,5 @@ Route::get('kakao/callback', [KakaoLoginController::class, 'callback']);
 
 Route::delete('admin/delete', [AdminController::class, 'delete'])->name('admin.delete');
 Route::delete('admin/deleteSelected', [AdminController::class, 'deleteSelected'])->name('admin.deleteSelected');
+
+require __DIR__ . '/admin.php';  //include admin

@@ -37,8 +37,13 @@ return [
 
     'guards' => [
         'web' => [
-            'driver' => 'session',
+            'driver' => 'session', //'token' 또는 'session' 둘 중 하나
             'provider' => 'users',
+        ],
+
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
         ],
     ],
 
@@ -61,14 +66,21 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
+            'driver' => 'eloquent',          //option : eloquent, database  //eloquent 설정시 'model'속성이 필요
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
+
+        // 'users' => [     //driver를 database로 설정시, 'table'속성이 필요.
         //     'driver' => 'database',
         //     'table' => 'users',
-        // ],
+        // ]
+
+
     ],
 
     /*
@@ -89,6 +101,13 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'admins' => [
+            'provider' => 'admins',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
