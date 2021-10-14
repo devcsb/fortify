@@ -11,7 +11,7 @@ class AdminController extends Controller
     public function delete(Request $request)
     {
         $id = $request->id;
-        Board::whereIn('id', $id)->delete();
+        Board::where('id', $id)->delete();
         return response()->json(['success' => "게시글이 정상적으로 삭제되었습니다!"]);
     }
 
