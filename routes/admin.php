@@ -14,7 +14,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         ->middleware(array_filter([
             'guest:admin',
             $limiter ? 'throttle:' . $limiter : null,
-        ]))->name('login');
+        ]));
 
     Route::view('/admin_home', 'home')->middleware('auth:admin')->name('home');
 });

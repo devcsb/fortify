@@ -46,6 +46,12 @@
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
                         @guest
+                            @if (Route::has('admin.login'))
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('admin.login') }}">{{ __('관리자로그인') }}</a>
+                                </li>
+                            @endif
+
                             @if (Route::has('login'))
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('login') }}">{{ __('로그인') }}</a>
@@ -70,8 +76,9 @@
                                     </a>
 
 
-                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                         document.getElementById('logout-form').submit();">
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                        onclick="event.preventDefault();
+                                                                                                                             document.getElementById('logout-form').submit();">
                                         {{ __('로그아웃') }}
                                     </a>
 

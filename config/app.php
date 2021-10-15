@@ -161,6 +161,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class, // laravel ide helper
         SocialiteProviders\Manager\ServiceProvider::class,  //add socialite provider
         // Laravel\Socialite\SocialiteServiceProvider::class, //socialite 공식
 
