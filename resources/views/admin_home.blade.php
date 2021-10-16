@@ -27,7 +27,7 @@
 
                 </div>
                 <a href="{{ route('profile.password.edit') }}" class="btn btn-xs btn-info"
-                    style="float:right; margin-top:5px;">비밀번호 변경</a>
+                   style="float:right; margin-top:5px;">비밀번호 변경</a>
             </div>
         </div>
     </div>

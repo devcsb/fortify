@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => (bool)env('APP_DEBUG', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,9 +52,13 @@ return [
     |
     */
 
+    'base_url' => env('APP_BASEURL', 'localhost'),    //NEW
+
     'url' => env('APP_URL', 'http://localhost'),
 
     'asset_url' => env('ASSET_URL', null),
+
+    'admin_subdomain' => env('APP_ADMIN_SUBDOMAIN', 'admin'), // NEW
 
     /*
     |--------------------------------------------------------------------------

@@ -7,6 +7,7 @@ use App\Http\Controllers\WorknetController;
 use App\Http\Controllers\Auth\KakaoLoginController;
 use App\Http\Controllers\Auth\NaverLoginController;
 use App\Http\Controllers\Auth\GoogleLoginController;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +19,21 @@ use App\Http\Controllers\Auth\GoogleLoginController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::domain(adminUrl())->name('admin.')->group(function () {
+    Route::view('login', 'auth.admin_login')->name('login');
+
+    $limiter = config('fortify.limiters.login');
+
+    Route::post('login', [AuthenticatedSessionController::class, 'store'])
+        ->middleware(array_filter([
+            'guest:admin',
+            $limiter ? 'throttle:' . $limiter : null,
+        ]));
+
+    Route::view('/admin_home', 'home')->middleware('auth:admin')->name('home');
+}); //서브도메인 라우트는 항상 메인 라우트가 위치하기 전에 이렇게 최상단에서 등록해야한다.
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -51,4 +67,4 @@ Route::get('kakao/callback', [KakaoLoginController::class, 'callback']);
 Route::delete('admin/delete', [AdminController::class, 'delete'])->name('admin.delete');
 Route::delete('admin/deleteSelected', [AdminController::class, 'deleteSelected'])->name('admin.deleteSelected');
 
-require __DIR__ . '/admin.php';  //include admin
+//require __DIR__ . '/admin.php';  //include admin

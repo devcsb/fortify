@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 
@@ -15,6 +16,9 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //
+        Request::macro('isAdmin', function () {
+            return $this->getHost() === adminUrl();
+        });
     }
 
     /**
@@ -24,8 +28,5 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
-        // Paginator::defaultView('custom');
-        // Paginator::defaultSimpleView('simple-bootstrap-4');
     }
 }
