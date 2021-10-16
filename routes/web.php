@@ -51,4 +51,14 @@ Route::get('kakao/callback', [KakaoLoginController::class, 'callback']);
 Route::delete('admin/delete', [AdminController::class, 'delete'])->name('admin.delete');
 Route::delete('admin/deleteSelected', [AdminController::class, 'deleteSelected'])->name('admin.deleteSelected');
 
-require __DIR__ . '/admin.php';  //include admin
+
+Route::group(['middleware' => 'auth'], function() {
+//    Route::group(['middleware' => 'role:user'], function() {
+//        Route::resource('lessons', \App\Http\Controllers\Students\LessonController::class);
+//    });
+
+    Route::group(['middleware' => 'role:admin', 'prefix' => 'admin', 'as' => 'admin.'], function() {
+//        Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+        Route::view('login','admin.admin_login')->name('login');
+    });
+});
