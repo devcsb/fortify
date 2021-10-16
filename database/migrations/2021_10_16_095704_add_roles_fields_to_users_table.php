@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddSomecolumnsToUsersTable extends Migration
+class AddRolesFieldsToUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,12 +14,7 @@ class AddSomecolumnsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            //gender, phone_number 추가
-            $table->string('gender')
-                ->after('password')->nullable();
-
-            $table->string('phone')
-                ->after('gender')->nullable();
+            $table->tinyInteger("role_id")->after('phone');
         });
     }
 
@@ -31,9 +26,9 @@ class AddSomecolumnsToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            //
-            $table->dropColumn('gender', 'phone');
-            
+            if (Schema::hasColumn('users', 'role_id')) {
+                $table->dropColumn('role_id');
+            }
         });
     }
 }

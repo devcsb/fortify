@@ -4,12 +4,6 @@
 
     <div class="container">
 
-        @if (auth()->check() === true)
-            @php $auth_name = auth()->user()->name; @endphp
-        @else
-            @php $auth_name=""; @endphp {{-- 임시 작업용. guard와 @auth 활용해서 수정할 것. --}}
-        @endif
-
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
@@ -17,9 +11,9 @@
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                @if ($auth_name == 'admin')
+                                @can('manage-boards')
                                     <th width="50px"><input type="checkbox" id="chkAll"></th>
-                                @endif
+                                @endcan
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     글번호
@@ -53,10 +47,10 @@
                             {{-- 1페이지에만 공지 나오는 방식 --}}
                             @foreach ($boards as $board)
                                 <tr>
-                                    @if ($auth_name == 'admin')
+                                    @can('manage-boards')
                                         <td><input type="checkbox" class="del_chk" data-id="{{ $board->id }}">
                                         </td>
-                                    @endif
+                                    @endcan
                                     {{-- @if ($board->notice_flag == 'Y')
                                 <td style="font-weight: bold" >{{ "공지" }}</td>
                               @else --}}
@@ -66,13 +60,13 @@
                                             href="{{ route('boards.show', $board->id) }}">{{ $board->title }}</a></td>
                                     <td>{{ $board->name }}</td>
                                     <td>{{ substr($board->created_at, 5, 5) }}</td>
-                                    @if ($auth_name == 'admin')
+                                        @can('manage-boards')
                                         <td>
                                             <button class="btn btn-danger" id="row_delete{{ $board->id }}"
                                                 data-url="{{ route('admin.delete') }}" data-tr="tr_{{ $board->id }}"
                                                 onclick="row_delete({{ $board->id }})">삭제</button>
                                         </td>
-                                    @endif
+                                    @endcan
                                 </tr>
                             @endforeach
 

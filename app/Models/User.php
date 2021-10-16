@@ -27,6 +27,7 @@ class User extends Authenticatable implements MustVerifyEmail
     //     'password',
     //     'gender',
     //     'phone',
+    //     'role_id',
     //     'social_id',
     //     'social_type',
     // ];
@@ -50,10 +51,6 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    // public function testDatebase()
-    // {
-    //     $user = User::factory()->make();
-    // }
 
     //일대다 관계 설정
     public function boards()
