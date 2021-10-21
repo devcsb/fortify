@@ -57,7 +57,7 @@ class BoardController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreBoardRequest $request)
@@ -75,7 +75,7 @@ class BoardController extends Controller
         $notice_falg = $request->notice_flag;
         if ($request->notice_flag !== 'Y') {
             $notice_falg = 'N';
-        };
+        }
 
         $board = new Board([
             'name' => $validated['name'],
@@ -112,14 +112,13 @@ class BoardController extends Controller
         $board->save();
 
 
-
         return redirect()->route('boards.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show(Board $board)
@@ -131,7 +130,7 @@ class BoardController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit(Board $board)
@@ -153,8 +152,8 @@ class BoardController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateBoardRequest $request, Board $board)
@@ -171,8 +170,6 @@ class BoardController extends Controller
         //Policy 사용한 권한제어 // 책 366p. 첫번 째 파라미터로 어빌리티명, 두 번째로 객체를 받는 authorize()함수
         $this->authorize('update', $board);
 
-
-        // $board->update($request->all());
 
         $validated = $request->validated();
 
@@ -230,7 +227,7 @@ class BoardController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(Board $board)
@@ -247,7 +244,4 @@ class BoardController extends Controller
         return redirect()->route('boards.index');
     }
 
-    public function test()
-    {
-    }
 }

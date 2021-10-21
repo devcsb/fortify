@@ -46,7 +46,6 @@ class WorknetController extends Controller
         if (isset($DataArr['messageCd'])) {
             $message = "검색조건에 일치하는 결과가 없습니다.";
             return view('worknets.index', compact('message'));
-        } else {
         }
         $worknets = $DataArr['wanted'];
         $total = $DataArr['total'];

@@ -61,7 +61,6 @@ class NaverLoginController extends Controller
                     return redirect()->route('socialogin.receive', compact('id', 'name', 'social_type'));
                 }
             } else {
-                // Auth::login($finduser);
                 auth()->login($finduser, true);
 
                 return redirect('/home');
