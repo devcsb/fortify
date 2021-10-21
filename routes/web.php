@@ -7,7 +7,7 @@ use App\Http\Controllers\WorknetController;
 use App\Http\Controllers\Auth\KakaoLoginController;
 use App\Http\Controllers\Auth\NaverLoginController;
 use App\Http\Controllers\Auth\GoogleLoginController;
-
+use App\Http\Controllers\CKEditorController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -62,3 +62,7 @@ Route::group(['middleware' => 'auth'], function() {
         Route::view('login','admin.admin_login')->name('login');
     });
 });
+
+//ckeditor
+
+Route::post('ckeditor/upload',[\App\Http\Controllers\CKEditorController::class,'ImageUpload'])->name('ckeditor.imgUpload');
