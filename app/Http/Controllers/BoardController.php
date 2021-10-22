@@ -88,14 +88,14 @@ class BoardController extends Controller
         if ($request->hasFile('file')) {
 
             //이름변경 작업
-            $origin_name_arr = explode('.', $validated['file']->getClientOriginalName());
+            $origin_name_arr = explode('.', $validated['file']->getClientOriginalName()); //확장자 나누기
             $origin_name = array_shift($origin_name_arr);
             $convert_name = preg_replace($pattern, '', $origin_name);
 
 
             //확장자 제어
             $ext = array_pop($origin_name_arr);
-            $banned_ext = array('php', 'phps', 'php3', 'php4', 'php5', 'php7', 'pht', 'phtml', 'htaccess', 'html', 'htm', 'inc');
+            $banned_ext = ['jpeg', 'jpg', 'gif', 'png'];
             if (in_array($ext, $banned_ext)) {
                 abort(403, '이 확장자를 가진 파일은 업로드 할 수 없습니다.');
             }

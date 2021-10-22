@@ -7,8 +7,6 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">{{ __('글 작성 ') }}</div>
-
-
                     <form action="{{ route('boards.store') }}" method="post" name="writeForm"
                           enctype="multipart/form-data">
                         @csrf

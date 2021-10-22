@@ -62,5 +62,11 @@
             </div>
         </div>
     </div>
-        <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+    <script src="{{ asset('ckeditor/ckeditor.js') }}"></script>
+    <script type="text/javascript">
+        CKEDITOR.replace('content', {
+            filebrowserUploadUrl: "{{route('ckeditor.imgUpload', ['_token' => csrf_token() ])}}",
+            filebrowserUploadMethod: 'form'
+        });
+    </script>
 @endsection
