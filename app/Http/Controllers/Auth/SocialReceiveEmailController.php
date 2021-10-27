@@ -7,9 +7,4 @@ use Illuminate\Http\Request;
 
 class SocialReceiveEmailController extends Controller
 {
-    //
-
-    public function receiveEmail()
-    {
-    }
 }

@@ -29,9 +29,21 @@ class StoreBoardRequest extends FormRequest
             'title' => 'required',
             'content' => 'required',
             'file' => 'nullable',
-            'file.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+//            'file.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'notice_flag' => 'nullable',
             //
         ];
     }
+
+    function messages()
+    {
+        return [
+//            'content.required' => '내용을 입력해주세요',
+//            'file.*.mimes' => '이 확장자를 가진 파일은 업로드할 수 없습니다.',
+        ];
+    }
+
+
+
+
 }

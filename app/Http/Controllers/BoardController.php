@@ -4,10 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBoardRequest;
 use App\Http\Requests\UpdateBoardRequest;
-use Illuminate\Http\Request;
 use App\Models\Board;
-use Illuminate\Support\Facades\File;
-use Symfony\Component\Console\Input\Input;
+use App\Models\File;
+use Illuminate\Http\Request;
 
 class BoardController extends Controller
 {
@@ -57,7 +56,7 @@ class BoardController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreBoardRequest $request)
@@ -75,7 +74,7 @@ class BoardController extends Controller
         $notice_falg = $request->notice_flag;
         if ($request->notice_flag !== 'Y') {
             $notice_falg = 'N';
-        };
+        }
 
         $board = new Board([
             'name' => $validated['name'],
@@ -84,33 +83,36 @@ class BoardController extends Controller
             'content' => $validated['content'],
             'notice_flag' => $notice_falg,     //input 받은 값이 null일 경우, validation Form Request에서 반환받은 값으로는 접근 불가하므로 request에서 직접 가져다쓴다.(배열에 없는 값이므로)
         ]);
-
-        if ($request->hasFile('file')) {
-
-            //이름변경 작업
-            $origin_name_arr = explode('.', $validated['file']->getClientOriginalName());
-            $origin_name = array_shift($origin_name_arr);
-            $convert_name = preg_replace($pattern, '', $origin_name);
-
-
-            //확장자 제어
-            $ext = array_pop($origin_name_arr);
-            $banned_ext = array('php', 'phps', 'php3', 'php4', 'php5', 'php7', 'pht', 'phtml', 'htaccess', 'html', 'htm', 'inc');
-            if (in_array($ext, $banned_ext)) {
-                abort(403, '이 확장자를 가진 파일은 업로드 할 수 없습니다.');
-            }
-
-            //파일명에 확장자 붙여주기
-            $convert_name = $convert_name . "." . $ext;
-
-            $fileName = time() . '_' . $validated['name'] . '_' . $convert_name;
-            $filePath = $validated['file']->storeAs('uploads', $fileName, 'public'); // storeAs($path, $name, $disk); 세번째 $disk는 옵션. $disk에는 filesystems.php에서 정의한 disk를 선택
-            $board->file_name = $fileName;
-            $board->file_path = $filePath;
-        }
-
         $board->save();
 
+
+        if ($request->hasFile('file')) {
+            $seq = 0;
+            foreach ($request->file('file') as $file) {
+                $fileOriName = $file->getClientOriginalName();
+                $fileName = substr($fileOriName, 0, strrpos($fileOriName, '.'));             // 확장자 뺀 파일명
+                $fileExtension = strtolower($file->getClientOriginalExtension());      // 파일 확장자
+                if (!in_array($fileExtension, ['jpeg', 'jpg', 'gif', 'png'])) {
+                    abort(403, '이 확장자를 가진 파일은 업로드 할 수 없습니다.');
+                }
+
+                //파일명에 확장자 붙여주기
+                $trimFileName = time() . '_' . $validated['name'] . '_' . $fileName . '.' . $fileExtension;
+                $filePath = $file->storeAs('uploads', $trimFileName, 'public'); // storeAs($path, $name, $disk); 세번째 $disk는 옵션. $disk에는 filesystems.php에서 정의한 disk를 선택
+
+
+                $file = new File([
+                    'board_id' => $board->id,
+                    'type' => 'board',
+                    'seq' => $seq += 1,
+                    'file_name' => $trimFileName,
+                    'file_path' => $filePath,
+                ]);
+                $file->save();
+
+            }
+
+        }
 
 
         return redirect()->route('boards.index');
@@ -119,7 +121,7 @@ class BoardController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show(Board $board)
@@ -131,7 +133,7 @@ class BoardController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit(Board $board)
@@ -153,8 +155,8 @@ class BoardController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateBoardRequest $request, Board $board)
@@ -171,8 +173,6 @@ class BoardController extends Controller
         //Policy 사용한 권한제어 // 책 366p. 첫번 째 파라미터로 어빌리티명, 두 번째로 객체를 받는 authorize()함수
         $this->authorize('update', $board);
 
-
-        // $board->update($request->all());
 
         $validated = $request->validated();
 
@@ -230,7 +230,7 @@ class BoardController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(Board $board)
@@ -247,7 +247,4 @@ class BoardController extends Controller
         return redirect()->route('boards.index');
     }
 
-    public function test()
-    {
-    }
 }
