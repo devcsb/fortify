@@ -21,6 +21,7 @@ class Board extends Model
 
     public function user()
     {
+       //  self::query()->paginate() // 모델 관계 정의할 때 사용
         return $this->belongsTo(User::class);
     }
 
