@@ -4,11 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBoardRequest;
 use App\Http\Requests\UpdateBoardRequest;
+use App\Models\Board;
 use App\Models\File;
 use Illuminate\Http\Request;
-use App\Models\Board;
-use Illuminate\Support\Facades\Crypt;
-use Symfony\Component\Console\Input\Input;
 
 class BoardController extends Controller
 {
@@ -89,7 +87,7 @@ class BoardController extends Controller
 
 
         if ($request->hasFile('file')) {
-
+            $seq = 0;
             foreach ($request->file('file') as $file) {
                 $fileOriName = $file->getClientOriginalName();
                 $fileName = substr($fileOriName, 0, strrpos($fileOriName, '.'));             // 확장자 뺀 파일명
@@ -102,10 +100,12 @@ class BoardController extends Controller
                 $trimFileName = time() . '_' . $validated['name'] . '_' . $fileName . '.' . $fileExtension;
                 $filePath = $file->storeAs('uploads', $trimFileName, 'public'); // storeAs($path, $name, $disk); 세번째 $disk는 옵션. $disk에는 filesystems.php에서 정의한 disk를 선택
 
+
                 $file = new File([
                     'board_id' => $board->id,
                     'type' => 'board',
-                    'file_name'=> $trimFileName,
+                    'seq' => $seq += 1,
+                    'file_name' => $trimFileName,
                     'file_path' => $filePath,
                 ]);
                 $file->save();
