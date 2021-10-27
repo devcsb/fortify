@@ -32,7 +32,7 @@
                             </tr>
                             <tr>
                                 <td class="td_left"><label for="file">파일 첨부</label></td>
-                                <td class="td_right"><input type="file" name="file"/></td>
+                                <td class="td_right"><input type="file" name="file[]" multiple="multiple"/></td>
                             </tr>
                             <tr>
                                 <td class="td_left"></td>

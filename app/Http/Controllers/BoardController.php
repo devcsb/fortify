@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBoardRequest;
 use App\Http\Requests\UpdateBoardRequest;
+use App\Models\File;
 use Illuminate\Http\Request;
 use App\Models\Board;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Crypt;
 use Symfony\Component\Console\Input\Input;
 
 class BoardController extends Controller
@@ -84,32 +85,34 @@ class BoardController extends Controller
             'content' => $validated['content'],
             'notice_flag' => $notice_falg,     //input 받은 값이 null일 경우, validation Form Request에서 반환받은 값으로는 접근 불가하므로 request에서 직접 가져다쓴다.(배열에 없는 값이므로)
         ]);
+        $board->save();
+
 
         if ($request->hasFile('file')) {
 
-            //이름변경 작업
-            $origin_name_arr = explode('.', $validated['file']->getClientOriginalName()); //확장자 나누기
-            $origin_name = array_shift($origin_name_arr);
-            $convert_name = preg_replace($pattern, '', $origin_name);
+            foreach ($request->file('file') as $file) {
+                $fileOriName = $file->getClientOriginalName();
+                $fileName = substr($fileOriName, 0, strrpos($fileOriName, '.'));             // 확장자 뺀 파일명
+                $fileExtension = strtolower($file->getClientOriginalExtension());      // 파일 확장자
+                if (!in_array($fileExtension, ['jpeg', 'jpg', 'gif', 'png'])) {
+                    abort(403, '이 확장자를 가진 파일은 업로드 할 수 없습니다.');
+                }
 
+                //파일명에 확장자 붙여주기
+                $trimFileName = time() . '_' . $validated['name'] . '_' . $fileName . '.' . $fileExtension;
+                $filePath = $file->storeAs('uploads', $trimFileName, 'public'); // storeAs($path, $name, $disk); 세번째 $disk는 옵션. $disk에는 filesystems.php에서 정의한 disk를 선택
 
-            //확장자 제어
-            $ext = array_pop($origin_name_arr);
-            $banned_ext = ['jpeg', 'jpg', 'gif', 'png'];
-            if (in_array($ext, $banned_ext)) {
-                abort(403, '이 확장자를 가진 파일은 업로드 할 수 없습니다.');
+                $file = new File([
+                    'board_id' => $board->id,
+                    'type' => 'board',
+                    'file_name'=> $trimFileName,
+                    'file_path' => $filePath,
+                ]);
+                $file->save();
+
             }
 
-            //파일명에 확장자 붙여주기
-            $convert_name = $convert_name . "." . $ext;
-
-            $fileName = time() . '_' . $validated['name'] . '_' . $convert_name;
-            $filePath = $validated['file']->storeAs('uploads', $fileName, 'public'); // storeAs($path, $name, $disk); 세번째 $disk는 옵션. $disk에는 filesystems.php에서 정의한 disk를 선택
-            $board->file_name = $fileName;
-            $board->file_path = $filePath;
         }
-
-        $board->save();
 
 
         return redirect()->route('boards.index');
