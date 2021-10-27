@@ -26,7 +26,6 @@ class Board extends Model
 
     public function files()
     {
-        return $this->hasMany(File::class,'board_id','id');
-        //->where('files.type','board')->orderBy('seq')
+        return $this->hasMany(File::class,'board_id','id')->where('files.type','board')->orderBy('seq');
     }
 }

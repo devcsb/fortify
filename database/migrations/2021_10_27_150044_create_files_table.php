@@ -17,9 +17,9 @@ class CreateFilesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('board_id');
             $table->enum('type',['notice','fnq','board']);
+            $table->unsignedTinyInteger('seq')->default(1);
             $table->string('file_name');
             $table->string('file_path');
-            $table->timestamps();
         });
     }
 
