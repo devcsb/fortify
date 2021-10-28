@@ -12,12 +12,19 @@
                         @csrf
                         <table id="write" class="min-w-full divide-y divide-gray-200">
                             <tr>
-                                <td class="td_left"><label for="name">작성자</label></td>
-                                <td class="td_right"><input name="name" type="text"
-                                                            id="name"
-                                                            value="">
+                                <td class="td_left"><label for="author">작성자</label></td>
+                                <td class="td_right"><input name="author" type="text" id="author" value="">
                                 </td>
-                                <input name="email" type="hidden" id="email" value="">
+                            </tr>
+                            <tr>
+                                <td class="td_left"><label for="password">비밀번호</label></td>
+                                <td class="td_right"><input name="password" type="text" id="password" value="">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td_left"><label for="secret_check">비밀글 설정</label></td>
+                                <td class="td_right"><input name="secret_check" type="checkbox" id="secret_check" value="1" checked>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="td_left"><label for="title">제 목</label></td>
@@ -48,5 +55,20 @@
             filebrowserUploadUrl: "{{route('ckeditor.imgUpload', ['_token' => csrf_token() ])}}",
             filebrowserUploadMethod: 'form'
         });
+
+
+        function row_delete(id) {
+            var check = confirm("정말 삭제하시겠습니까?");
+            if (check == true) {
+
+
+
+                return false;
+            }
+
+
+        }
+
+
     </script>
 @endsection

@@ -36,7 +36,7 @@
                             <tr>
                                 <td>{{ 'id' }}</td>
                                 <td style="width: 60%">
-{{--                                    <a href="{{ route('boards.show', $board->id) }}">{{ $board->title }}</a></td>--}}
+{{--                                    <a href="{{ route('qna.show', $board->id) }}">{{ $board->title }}</a></td>--}}
                                 <td>{{ 'name' }}</td>
                                 <td>{{ 'created_at' }}</td>
                             </tr>
@@ -45,17 +45,17 @@
                         </tbody>
                     </table>
                 </div>
-                <a href="{{ route('boards.index') }}" style="float: right; margin: 15px;">
+                <a href="{{ route('qna.index') }}" style="float: right; margin: 15px;">
                     <button>목록</button>
                 </a>
-                <a href="{{ route('boards.create') }}" style="float: right; margin-top: 15px;">
+                <a href="{{ route('qna.create') }}" style="float: right; margin-top: 15px;">
                     <button>글쓰기</button>
                 </a>
 {{--                <div class="col-md-4" style="margin:10px">--}}
 {{--                    {{ $boards->withQueryString()->links('vendor.pagination.custom') }}</div>--}}
 
             </div>
-            <form action="{{ route('boards.index') }}" method="GET" role="search" class="col-md-4"
+            <form action="{{ route('qna.index') }}" method="GET" role="search" class="col-md-4"
                   style="margin:10px; float: right;">
 
 {{--                <input type="text" class="form-control mr-2" name="search" placeholder="검색할 내용을 입력하세요"--}}
