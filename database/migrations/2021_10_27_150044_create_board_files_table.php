@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFilesTable extends Migration
+class CreateBoardFilesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateFilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('files', function (Blueprint $table) {
+        Schema::create('board_files', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('board_id');
+            $table->unsignedBigInteger('board_id')->index();
             $table->enum('type',['notice','fnq','board']);
             $table->unsignedTinyInteger('seq')->default(1);
             $table->string('file_name');
@@ -30,6 +30,6 @@ class CreateFilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('files');
+        Schema::dropIfExists('board_files');
     }
 }

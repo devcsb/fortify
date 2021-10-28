@@ -8,6 +8,8 @@ use App\Http\Controllers\Auth\KakaoLoginController;
 use App\Http\Controllers\Auth\NaverLoginController;
 use App\Http\Controllers\Auth\GoogleLoginController;
 use App\Http\Controllers\CKEditorController;
+use \App\Http\Controllers\QnaboardController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,6 +25,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::resource('boards', BoardController::class);
+Route::resource('qna', QnaboardController::class);
 
 Route::view('home', 'home')->middleware(['auth', 'verified']);
 
@@ -37,6 +40,20 @@ Route::get("worknets/{worknet}", [WorknetController::class, "show"])->name('work
 //이메일중복시 사용자로부터 입력값 받기
 Route::view('auth/receive_email', 'auth.receive_email')->name('socialogin.receive');
 
+Route::delete('admin/delete', [AdminController::class, 'delete'])->name('admin.delete');
+Route::delete('admin/deleteSelected', [AdminController::class, 'deleteSelected'])->name('admin.deleteSelected');
+
+//auth
+Route::group(['middleware' => 'auth'], function () {
+    Route::group(['middleware' => 'role:admin', 'prefix' => 'admin', 'as' => 'admin.'], function () {
+        Route::view('login', 'admin.admin_login')->name('login');
+    });
+});
+
+//ckeditor
+Route::post('ckeditor/upload', [\App\Http\Controllers\CKEditorController::class, 'ImageUpload'])->name('ckeditor.imgUpload');
+
+//social login
 Route::get('google/login', [GoogleLoginController::class, 'redirect'])->name('google.login');
 Route::get('google/callback', [GoogleLoginController::class, 'callback']);
 
@@ -47,22 +64,3 @@ Route::get('naver/callback', [NaverLoginController::class, 'callback']);
 Route::get('kakao/login', [KakaoLoginController::class, 'redirect'])->name('kakao.login');
 Route::post('kakao/login', [KakaoLoginController::class, 'receiveEmail'])->name('kakao.receive');
 Route::get('kakao/callback', [KakaoLoginController::class, 'callback']);
-
-Route::delete('admin/delete', [AdminController::class, 'delete'])->name('admin.delete');
-Route::delete('admin/deleteSelected', [AdminController::class, 'deleteSelected'])->name('admin.deleteSelected');
-
-
-Route::group(['middleware' => 'auth'], function() {
-//    Route::group(['middleware' => 'role:user'], function() {
-//        Route::resource('lessons', \App\Http\Controllers\Students\LessonController::class);
-//    });
-
-    Route::group(['middleware' => 'role:admin', 'prefix' => 'admin', 'as' => 'admin.'], function() {
-//        Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
-        Route::view('login','admin.admin_login')->name('login');
-    });
-});
-
-//ckeditor
-
-Route::post('ckeditor/upload',[\App\Http\Controllers\CKEditorController::class,'ImageUpload'])->name('ckeditor.imgUpload');

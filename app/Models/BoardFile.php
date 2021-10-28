@@ -5,7 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class qnaboard extends Model
+class BoardFile extends Model
 {
     use HasFactory;
+    public $timestamps = false;
+    protected $guarded = [];
 }

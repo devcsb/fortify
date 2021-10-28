@@ -24,16 +24,18 @@
                     </table>
                     내용: {!! $board->content !!}
                     <div style="margin-top:50px">
-                        @if (isset($board->file_path))
-                            <img src="{{ asset('storage/' . $board->file_path) }}" alt="첨부파일" title="첨부파일"
+                        @foreach($board->files as $file)
+                            <img src="{{ asset('storage/' . $file->file_path) }}" alt="첨부파일" title="첨부파일"
                                  style="width: 50%; height: 50%">
+                        @endforeach
                     </div>
                     <div id="file_view">
-                        첨부파일: <a href="{{ Storage::url($board->file_path) }}"
-                                 download>{{ Storage::url($board->file_path) }}</a>
+                        @foreach($board->files as $file)
+                            첨부파일: <a href="{{ Storage::url($file->file_path) }}"
+                                     download>{{ Storage::url($file->file_path) }}</a>
+                        @endforeach
                     </div>
                 </div>
-                @endif
                 <a href="{{ route('boards.index') }}" style="float: right; margin-top: 15px;">
                     <button>글 목록</button>
                 </a>

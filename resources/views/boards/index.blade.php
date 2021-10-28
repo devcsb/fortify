@@ -56,8 +56,8 @@
                           @else --}}
                                 <td>{{ $board->id }}</td>
                                 {{-- @endif --}}
-                                <td style="width: 60%"><a
-                                        href="{{ route('boards.show', $board->id) }}">{{ $board->title }}</a></td>
+                                <td style="width: 60%">
+                                    <a href="{{ route('boards.show', $board->id) }}">{{ $board->title }}</a></td>
                                 <td>{{ $board->name }}</td>
                                 <td>{{ substr($board->created_at, 5, 5) }}</td>
                                 @can('manage-boards')
@@ -81,8 +81,8 @@
                     <button>글쓰기</button>
                 </a>
                 @can('manage-boards')
-                <button class="btn btn-danger" id="delete_all" data-url="{{ route('admin.deleteSelected') }}">삭제
-                </button>
+                    <button class="btn btn-danger" id="delete_all" data-url="{{ route('admin.deleteSelected') }}">삭제
+                    </button>
                 @endcan
                 <div class="col-md-4" style="margin:10px">
                     {{ $boards->withQueryString()->links('vendor.pagination.custom') }}</div>
