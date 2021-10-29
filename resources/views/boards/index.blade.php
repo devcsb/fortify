@@ -44,7 +44,6 @@
                             </tr>
                         @endforeach
 
-                        {{-- 1페이지에만 공지 나오는 방식 --}}
                         @foreach ($boards as $board)
                             <tr>
                                 @can('manage-boards')

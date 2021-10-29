@@ -30,36 +30,43 @@
                         </tr>
                         </thead>
                         <tbody>
-
-
-{{--                            게시글 시작--}}
+                        {{--                            게시글 시작--}}
+                        @foreach($qnas as $qna)
                             <tr>
-                                <td>{{ 'id' }}</td>
+                                <td>{{ $qna->id }}</td>
                                 <td style="width: 60%">
-{{--                                    <a href="{{ route('qna.show', $board->id) }}">{{ $board->title }}</a></td>--}}
-                                <td>{{ 'name' }}</td>
-                                <td>{{ 'created_at' }}</td>
+                                    @if($qna->secret_flag ==1)
+                                        비밀
+                                    @endif
+                                    @if($qna->indent !=0)
+                                        ↳
+                                        @for($i =0; $i <= $qna->indent * 2; $i++)
+                                            &nbsp;
+                                        @endfor
+                                    @endif
+                                    <a href="{{ route('qnas.show', $qna->id) }}">{{ $qna->title }}</a></td>
+                                <td>{{ $qna->author }}</td>
+                                <td>{{ $qna->created_at }}</td>
                             </tr>
-{{--                            게시글 끝--}}
-
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
-                <a href="{{ route('qna.index') }}" style="float: right; margin: 15px;">
+                <a href="{{ route('qnas.index') }}" style="float: right; margin: 15px;">
                     <button>목록</button>
                 </a>
-                <a href="{{ route('qna.create') }}" style="float: right; margin-top: 15px;">
+                <a href="{{ route('qnas.create') }}" style="float: right; margin-top: 15px;">
                     <button>글쓰기</button>
                 </a>
-{{--                <div class="col-md-4" style="margin:10px">--}}
-{{--                    {{ $boards->withQueryString()->links('vendor.pagination.custom') }}</div>--}}
+                {{--                <div class="col-md-4" style="margin:10px">--}}
+                {{--                    {{ $boards->withQueryString()->links('vendor.pagination.custom') }}</div>--}}
 
             </div>
-            <form action="{{ route('qna.index') }}" method="GET" role="search" class="col-md-4"
+            <form action="{{ route('qnas.index') }}" method="GET" role="search" class="col-md-4"
                   style="margin:10px; float: right;">
 
-{{--                <input type="text" class="form-control mr-2" name="search" placeholder="검색할 내용을 입력하세요"--}}
-{{--                       value="{{ $search = request()->get('search') }}" id="search" style="float:right">--}}
+                {{--                <input type="text" class="form-control mr-2" name="search" placeholder="검색할 내용을 입력하세요"--}}
+                {{--                       value="{{ $search = request()->get('search') }}" id="search" style="float:right">--}}
                 <div class="input-group">
                     <span class="input-group-btn mr-5 mt-1">
                         <button type="submit" title="Search projects">

@@ -7,7 +7,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">{{ __('글 작성 ') }}</div>
-                    <form action="{{ route('boards.store') }}" method="post" name="writeForm"
+                    <form action="{{ route('qnas.store') }}" method="post" name="writeForm"
                           enctype="multipart/form-data">
                         @csrf
                         <table id="write" class="min-w-full divide-y divide-gray-200">
@@ -23,7 +23,10 @@
                             </tr>
                             <tr>
                                 <td class="td_left"><label for="secret_check">비밀글 설정</label></td>
-                                <td class="td_right"><input name="secret_check" type="checkbox" id="secret_check" value="1" checked>
+                                <td class="td_right">
+                                    <input name="secret_check" type="hidden" id="secret_check" value="0">
+                                    <input name="secret_check" type="checkbox" id="secret_check"
+                                           value="1" checked>
                                 </td>
                             </tr>
                             <tr>
@@ -40,8 +43,7 @@
 
                         </table>
                         <section id="commandCell">
-                            <input type="reset" value="다시쓰기" style="float: right; margin-right: 10px;"/><input
-                                type="submit" value="등록" style="float: right; margin-right: 10px;">
+                            <input type="submit" value="등록" style="float: right; margin-right: 10px;">
                         </section>
                     </form>
 
@@ -55,20 +57,5 @@
             filebrowserUploadUrl: "{{route('ckeditor.imgUpload', ['_token' => csrf_token() ])}}",
             filebrowserUploadMethod: 'form'
         });
-
-
-        function row_delete(id) {
-            var check = confirm("정말 삭제하시겠습니까?");
-            if (check == true) {
-
-
-
-                return false;
-            }
-
-
-        }
-
-
     </script>
 @endsection

@@ -434,7 +434,7 @@
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
             <div style="color: rgb(40, 50, 141)"> fortify</div>
             <div class="col-md-6 offset-md-4">
-                <a href="{{ route('qna.index') }}" class="btn btn-xs btn-info pull-right">qna 목록</a>
+                <a href="{{ route('qnas.index') }}" class="btn btn-xs btn-info pull-right">qna 목록</a>
             </div>
             <br>
             <div class="col-md-6 offset-md-4">

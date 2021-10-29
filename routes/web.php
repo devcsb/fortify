@@ -24,8 +24,9 @@ use \App\Http\Controllers\QnaboardController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::view('qnas/{qna}/checkpw', [QnaboardController::class, 'checkpw'])->name('qnas.checkpw');
 Route::resource('boards', BoardController::class);
-Route::resource('qna', QnaboardController::class);
+Route::resource('qnas', QnaboardController::class);
 
 Route::view('home', 'home')->middleware(['auth', 'verified']);
 
