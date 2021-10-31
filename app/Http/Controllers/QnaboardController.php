@@ -135,6 +135,7 @@ class QnaboardController extends Controller
      */
     public function inputPw(string $qnaId, string $caller, string $password)
     {
+        //if문으로 show, destroy시 각각 폼 입력 뷰페이지 return값 다르게 설정하기. destroy시 폼 메서드 스푸핑해야하므로
         return view('qnas.input_pw', compact('qnaId', 'caller', 'password'));
     }
 
@@ -153,9 +154,11 @@ class QnaboardController extends Controller
         $verified = Hash::check($request->password, $dbPassword);
 
         if ($verified) {
-            if($caller =='show'){
-
-            return redirect()->route('qnas.show', compact('qna'))->with(['verified' => $verified]);
+            if ($caller == 'show') {
+                return redirect()->route('qnas.show', compact('qna'))->with(['verified' => $verified]);
+            }
+            if ($caller == 'destroy') {
+                return redirect()->route('qnas.destroy', $qna->id)->with(['verified' => $verified]);
             }
         } else {
             return redirect()->back();
