@@ -46,7 +46,6 @@
                         <button style="float: right; margin: 15px;">글 삭제</button>
                     </form>
                 @endcan
-                {{-- <a href="{{ route('boards.destroy',$board->id) }}" style="float: right; margin: 15px;"><button>글 삭제</button></a> --}}
                 {{-- delete 리퀘스트는 RESTful 원칙에 의거해서 그냥 href만 써서 get방식으로 보내면 작동안됨. post로 보내는 폼 안에서 @method('DELETE') 지시어로 delete요청으로 바꿔서 보내야 한다. --}}
                 @can('delete', $board)
                     <a href="{{ route('boards.edit', $board->id) }}" style="float: right; margin-top: 15px;">

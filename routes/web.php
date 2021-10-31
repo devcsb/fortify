@@ -24,7 +24,7 @@ use \App\Http\Controllers\QnaboardController;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::view('qnas/{qna}/checkpw', [QnaboardController::class, 'checkpw'])->name('qnas.checkpw');
+Route::post('qnas/{qna}/checkPw/{caller}', [QnaboardController::class, 'checkPw'])->name('qnas.checkPw');
 Route::resource('boards', BoardController::class);
 Route::resource('qnas', QnaboardController::class);
 
@@ -50,6 +50,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::view('login', 'admin.admin_login')->name('login');
     });
 });
+
 
 //ckeditor
 Route::post('ckeditor/upload', [\App\Http\Controllers\CKEditorController::class, 'ImageUpload'])->name('ckeditor.imgUpload');
