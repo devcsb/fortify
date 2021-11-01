@@ -11,6 +11,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use phpDocumentor\Reflection\DocBlock\Tags\Method;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class QnaboardController extends Controller
 {
@@ -91,9 +93,9 @@ class QnaboardController extends Controller
      * @param int $id
      * @return Response
      */
-    public function edit($id)
+    public function edit(Qnaboard $qna)
     {
-        //
+        return view('qnas.edit', compact('qna'));
     }
 
     /**
@@ -103,9 +105,11 @@ class QnaboardController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Qnaboard $qna)
     {
-        //
+        $qna=Qnaboard::firstWhere('id',$qna->id);
+
+
     }
 
     /**
@@ -117,10 +121,10 @@ class QnaboardController extends Controller
     public function destroy(Qnaboard $qna
     ) // Route Model Binding 규칙에 의거, 라우트에서 명시한 세그먼트 값{qna}와 일치하는 $qna 파라미터로 받아야 묵시적 바인딩이 자동으로 됨.
     {
-        if ($qna->secret_flag == 1 && !Session::has('verified')) { // session flash 값은 다음 http요청시 바로 삭제됨
+
+        if (!Session::has('verified')) { // session flash 값은 다음 http요청시 바로 삭제됨
             return $this->inputPw($qna->id, 'destroy', $qna->password);
         }
-
         $qna->delete();
 
         return redirect()->route('qnas.index');
@@ -135,10 +139,10 @@ class QnaboardController extends Controller
      */
     public function inputPw(string $qnaId, string $caller, string $password)
     {
+
         //if문으로 show, destroy시 각각 폼 입력 뷰페이지 return값 다르게 설정하기. destroy시 폼 메서드 스푸핑해야하므로
         return view('qnas.input_pw', compact('qnaId', 'caller', 'password'));
     }
-
 
     /**
      * @param string $qnaId
@@ -158,9 +162,15 @@ class QnaboardController extends Controller
                 return redirect()->route('qnas.show', compact('qna'))->with(['verified' => $verified]);
             }
             if ($caller == 'destroy') {
-                return redirect()->route('qnas.destroy', $qna->id)->with(['verified' => $verified]);
+//                return redirect()->route('qnas.destroy', $qna->id)->with(['verified' => $verified]);
+//                return redirect()->action([QnaboardController::class, 'create'],['qna'=>$qnaId])->header('');
+
+                Qnaboard::destroy($qnaId);
+                Alert::success('삭제 성공', '문의글이 성공적으로 삭제되었습니다');
+                return redirect()->route('qnas.index');
             }
         } else {
+            Alert::error('비밀번호 오류', '비밀번호가 틀렸습니다');
             return redirect()->back();
         }
     }

@@ -8,7 +8,7 @@
                 <div class="card">
                     <div class="card-header">{{ __('글 수정 ') }}</div>
 
-
+{{$board}}
                     <form action="{{ route('boards.update', $board->id) }}" method="post" name="updateForm"
                           enctype="multipart/form-data">
                         @csrf

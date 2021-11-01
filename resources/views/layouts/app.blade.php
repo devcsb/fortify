@@ -24,7 +24,9 @@
 </head>
 
 <body>
+@include('sweetalert::alert') {{--body 태그 안에 include 해야 함 --}}
 <div id="app">
+
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">

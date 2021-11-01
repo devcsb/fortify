@@ -164,6 +164,8 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class, // laravel ide helper
         SocialiteProviders\Manager\ServiceProvider::class,  //add socialite provider
         // Laravel\Socialite\SocialiteServiceProvider::class, //socialite 공식
+        RealRashid\SweetAlert\SweetAlertServiceProvider::class, //sweet-alert
+
 
         /*
          * Package Service Providers...
@@ -179,6 +181,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\FortifyServiceProvider::class
+
 
     ],
 
@@ -234,6 +237,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         // 'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        'Alert' => RealRashid\SweetAlert\Facades\Alert::class, //sweet-alert
+
 
     ],
 
