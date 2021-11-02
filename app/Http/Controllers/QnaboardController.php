@@ -221,13 +221,13 @@ class QnaboardController extends Controller
 //                return redirect()->route('qnas.destroy', $qna->id)->with(['verified' => $verified]);
 //                return redirect()->action([QnaboardController::class, 'create'],['qna'=>$qnaId])->header('');
 
-//                 = Qnaboard::whereId($qnaId);
-//                if ($qna->has_reply > 0) {  //답글이 달린 부모글 삭제시 답글도 모두 삭제
-//                    $qnas = Qnaboard::whereGroup($qna->group)->where('id', '>=', $qna->id)->get(); //하위글 삭제시 부모글은 삭제되지 않도록
-//                    foreach ($qnas as $row) {
-//                        $row->delete();
-//                    }
-//                }
+                 $qna= Qnaboard::whereId($qnaId);
+                if ($qna->has_reply > 0) {  //답글이 달린 부모글 삭제시 답글도 모두 삭제
+                    $qnas = Qnaboard::whereGroup($qna->group)->where('id', '>=', $qna->id)->get(); //하위글 삭제시 부모글은 삭제되지 않도록
+                    foreach ($qnas as $row) {
+                        $row->delete();
+                    }
+                }
                 Qnaboard::destroy($qnaId);
                 Alert::success('삭제 성공', '문의글이 성공적으로 삭제되었습니다');
                 return redirect()->route('qnas.index');

@@ -18,7 +18,7 @@
                             </tr>
                             <tr>
                                 <td class="td_left"><label for="password">비밀번호</label></td>
-                                <td class="td_right"><input name="password" type="text" id="password" value="">
+                                <td class="td_right"><input name="password" type="password" id="password" value="">
                                 </td>
                             </tr>
                             <tr>
