@@ -24,6 +24,7 @@ class CreateQnaboardsTable extends Migration
             $table->unsignedInteger('group')->nullable()->comment('부모글 번호로 그루핑');
             $table->unsignedInteger('step')->default(0)->nullable()->comment('계층 정보');
             $table->unsignedInteger('indent')->default(0)->nullable()->comment('들여쓰기 단계');
+            $table->unsignedInteger('has_reply')->default(0)->nullable()->comment('답변글 보유 여부');
 
             $table->timestamps();
         });

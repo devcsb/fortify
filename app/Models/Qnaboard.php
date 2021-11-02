@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $group 부모글 번호로 그루핑
  * @property int|null $step 계층 정보
  * @property int|null $indent
+ * @property int|null $has_reply
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Qnaboard newModelQuery()

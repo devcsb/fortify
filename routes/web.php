@@ -25,12 +25,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::post('qnas/{qna}/checkPw/{caller}', [QnaboardController::class, 'checkPw'])->name('qnas.checkPw');
+Route::get('qnas/{qna}/createReply',[QnaboardController::class,'createReply'])->name('qnas.create_reply');
+Route::post('qnas/{qna}/storeReply',[QnaboardController::class,'storeReply'])->name('qnas.store_reply');
+
 Route::resource('boards', BoardController::class);
 Route::resource('qnas', QnaboardController::class);
 
 Route::view('home', 'home')->middleware(['auth', 'verified']);
 
-//이유는 모르겠지만 Route::view()에서는 이름이 지정되지 않는다. 따로 체인메서드로 name('라우트명')으로 이름을 지정해줘야한다.
+//Route::view()에서는 이름이 지정되지 않는다. 따로 체인메서드로 name('라우트명')으로 이름을 지정해줘야한다.
 Route::view('profile/edit', 'profile.edit')->name('profile.edit')->middleware('auth');
 
 Route::view('profile/password/edit', 'profile.password.edit')->name('profile.password.edit')->middleware('auth');  //컨벤션 질문 passwordEdit

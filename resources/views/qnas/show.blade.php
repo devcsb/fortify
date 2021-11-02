@@ -41,7 +41,9 @@
                             수정
                         </button>
                     </a>
-
+                <a href="{{ route('qnas.create_reply',['qna'=>$qna->id])}}" style="float: right; margin-top: 15px;">
+                    <button>답글 작성
+                    </button>
 
             </div>
         </div>

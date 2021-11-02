@@ -44,7 +44,10 @@
                                             &nbsp;
                                         @endfor
                                     @endif
-                                    <a href="{{ route('qnas.show', $qna->id) }}">{{ $qna->title }}</a></td>
+                                    <a href="{{ route('qnas.show', $qna->id) }}">{{ $qna->title }}</a>
+                                    @if($qna->has_reply >0 && $qna->step==0)
+                                        답변완료
+                                    @endif</td>
                                 <td>{{ $qna->author }}</td>
                                 <td>{{ $qna->created_at }}</td>
                             </tr>
@@ -67,14 +70,7 @@
 
                 {{--                <input type="text" class="form-control mr-2" name="search" placeholder="검색할 내용을 입력하세요"--}}
                 {{--                       value="{{ $search = request()->get('search') }}" id="search" style="float:right">--}}
-                <div class="input-group">
-                    <span class="input-group-btn mr-5 mt-1">
-                        <button type="submit" title="Search projects">
-                            <span class="fas fa-search">검색</span>
-                        </button>
-                    </span>
 
-                </div>
             </form>
         </div>
     </div>

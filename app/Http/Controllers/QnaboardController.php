@@ -79,6 +79,9 @@ class QnaboardController extends Controller
      */
     public function show(Qnaboard $qna)
     {
+        if (auth()->check()) {
+            return view('qnas.show', compact('qna'));
+        }
         //비밀글이면서 session에 verified 값이 없을 때(check 통과하지 않았을 때)
         if ($qna->secret_flag == 1 && !Session::has('verified')) { // session flash 값은 다음 http요청시 바로 삭제됨
             return $this->inputPw($qna->id, 'show', $qna->password);
@@ -107,8 +110,23 @@ class QnaboardController extends Controller
      */
     public function update(Request $request, Qnaboard $qna)
     {
-        $qna=Qnaboard::firstWhere('id',$qna->id);
+        $qna = Qnaboard::firstWhere('id', $qna->id);
+        $dbPassword = $qna->password;
+        $verified = Hash::check($request->password, $dbPassword);
 
+        if (!$verified) {
+            Alert::error('비밀번호 오류', '비밀번호가 틀렸습니다');
+            return redirect()->back();
+        }
+
+        $qna->author = $request->input('author');
+        $qna->title = $request->input('title');
+        $qna->secret_flag = $request->input('secret_check');
+        $qna->content = $request->input('content');
+
+        $qna->save();
+
+        return redirect()->route('qnas.show', $qna->id);
 
     }
 
@@ -122,10 +140,49 @@ class QnaboardController extends Controller
     ) // Route Model Binding 규칙에 의거, 라우트에서 명시한 세그먼트 값{qna}와 일치하는 $qna 파라미터로 받아야 묵시적 바인딩이 자동으로 됨.
     {
 
+        if (auth()->check()) { //관리자일경우
+            if ($qna->has_reply > 0) {  //답글이 달린 부모글 삭제시 답글도 모두 삭제
+                $qnas = Qnaboard::whereGroup($qna->group)->where('id', '>=', $qna->id)->get(); //하위글 삭제시 부모글은 삭제되지 않도록
+                foreach ($qnas as $row) {
+                    $row->delete();
+                }
+            }
+            return redirect()->route('qnas.index');
+        }
+
         if (!Session::has('verified')) { // session flash 값은 다음 http요청시 바로 삭제됨
             return $this->inputPw($qna->id, 'destroy', $qna->password);
         }
-        $qna->delete();
+        return redirect()->route('qnas.index');
+    }
+
+
+    public function createReply(Qnaboard $qna)
+    {
+        return view('qnas.create_reply', compact('qna'));
+    }
+
+
+    public function storeReply(Request $request, Qnaboard $qna)
+    {
+        $step = $qna->step;
+        $indent = $qna->indent;
+
+        $parent = Qnaboard::firstWhere('id', $qna->id);
+        $parent->has_reply++;
+        $parent->save();
+
+        $reply = new Qnaboard([
+            'author' => $request->input('author'),
+            'password' => $qna->password,
+            'secret_flag' => 1, //비밀글 =1 공개글 =0
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
+            'group' => $qna->group,
+            'step' => $step + 1,
+            'indent' => $indent + 1,
+        ]);
+        $reply->save();
 
         return redirect()->route('qnas.index');
     }
@@ -139,7 +196,6 @@ class QnaboardController extends Controller
      */
     public function inputPw(string $qnaId, string $caller, string $password)
     {
-
         //if문으로 show, destroy시 각각 폼 입력 뷰페이지 return값 다르게 설정하기. destroy시 폼 메서드 스푸핑해야하므로
         return view('qnas.input_pw', compact('qnaId', 'caller', 'password'));
     }
@@ -165,13 +221,20 @@ class QnaboardController extends Controller
 //                return redirect()->route('qnas.destroy', $qna->id)->with(['verified' => $verified]);
 //                return redirect()->action([QnaboardController::class, 'create'],['qna'=>$qnaId])->header('');
 
+//                 = Qnaboard::whereId($qnaId);
+//                if ($qna->has_reply > 0) {  //답글이 달린 부모글 삭제시 답글도 모두 삭제
+//                    $qnas = Qnaboard::whereGroup($qna->group)->where('id', '>=', $qna->id)->get(); //하위글 삭제시 부모글은 삭제되지 않도록
+//                    foreach ($qnas as $row) {
+//                        $row->delete();
+//                    }
+//                }
                 Qnaboard::destroy($qnaId);
                 Alert::success('삭제 성공', '문의글이 성공적으로 삭제되었습니다');
                 return redirect()->route('qnas.index');
             }
         } else {
             Alert::error('비밀번호 오류', '비밀번호가 틀렸습니다');
-            return redirect()->back();
+            return $this->inputPw($qna->id, $caller, $qna->password);
         }
     }
 
