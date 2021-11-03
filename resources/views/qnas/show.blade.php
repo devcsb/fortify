@@ -31,16 +31,16 @@
                 <a href="{{ route('qnas.index') }}" style="float: right; margin-top: 15px;">
                     <button>글 목록</button>
                 </a>
-                    <form action="{{ route('qnas.destroy', $qna->id) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button style="float: right; margin: 15px;">글 삭제</button>
-                    </form>
-                    <a href="{{ route('qnas.edit', $qna->id) }}" style="float: right; margin-top: 15px;">
-                        <button>글
-                            수정
-                        </button>
-                    </a>
+                <form action="{{ route('qnas.destroy', $qna->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button style="float: right; margin: 15px;">글 삭제</button>
+                </form>
+                <a href="{{ route('qnas.edit', $qna->id) }}" style="float: right; margin-top: 15px;">
+                    <button>글
+                        수정
+                    </button>
+                </a>
                 <a href="{{ route('qnas.create_reply',['qna'=>$qna->id])}}" style="float: right; margin-top: 15px;">
                     <button>답글 작성
                     </button>

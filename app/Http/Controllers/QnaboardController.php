@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use phpDocumentor\Reflection\DocBlock\Tags\Method;
@@ -23,7 +24,7 @@ class QnaboardController extends Controller
      */
     public function index(Request $request)
     {
-        $qnas = Qnaboard::orderByDesc('group')->get(); // orderby만 쓰면 제대로 가져오지 못한다. get() 체인해줘야함.
+        $qnas = Qnaboard::orderByDesc('group')->orderBy('indent')->orderByDesc('step')->get();
 //        $qnas = Qnaboard::where('step','==','0')->orderByDesc('group')->get(); //원본 글만 전달
 
         return view('qnas.index', compact('qnas'));
@@ -79,15 +80,26 @@ class QnaboardController extends Controller
      */
     public function show(Qnaboard $qna)
     {
-        if (auth()->check()) {
-            return view('qnas.show', compact('qna'));
+        $parent = Qnaboard::where('group', '=', $qna->group)->where('step', '>', $qna->step)->get();
+//        dd($parent);
+        if (!auth()->check()) {
+            //비밀글이면서 session에 verified 값이 없을 때(check 통과하지 않았을 때)
+            if ($qna->secret_flag == 1 && !Session::has('verified')) { // session flash 값은 다음 http요청시 바로 삭제됨
+                return $this->inputPw($qna->id, 'show', $qna->password);
+            }
         }
-        //비밀글이면서 session에 verified 값이 없을 때(check 통과하지 않았을 때)
-        if ($qna->secret_flag == 1 && !Session::has('verified')) { // session flash 값은 다음 http요청시 바로 삭제됨
-            return $this->inputPw($qna->id, 'show', $qna->password);
+        $answer = null;
+        if ($qna->has_reply !== 0) { //문의글 일 때
+            $answer = Qnaboard::whereGroup($qna->group)->where('id', '!=', $qna->id)->get(); // 부모글의 답글 가져오기
         }
 
-        return view('qnas.show', compact('qna'));
+        $parent = null;
+        if ($qna->step !== 0) {
+            $parent = Qnaboard::whereGroup($qna->group)->where('id', '<', $qna->id)->get();
+//            dd($parent);
+        }
+
+        return view('qnas.show', compact('qna', 'answer'));
     }
 
     /**
@@ -127,7 +139,6 @@ class QnaboardController extends Controller
         $qna->save();
 
         return redirect()->route('qnas.show', $qna->id);
-
     }
 
     /**
@@ -139,7 +150,6 @@ class QnaboardController extends Controller
     public function destroy(Qnaboard $qna
     ) // Route Model Binding 규칙에 의거, 라우트에서 명시한 세그먼트 값{qna}와 일치하는 $qna 파라미터로 받아야 묵시적 바인딩이 자동으로 됨.
     {
-
         if (auth()->check()) { //관리자일경우
             if ($qna->has_reply > 0) {  //답글이 달린 부모글 삭제시 답글도 모두 삭제
                 $qnas = Qnaboard::whereGroup($qna->group)->where('id', '>=', $qna->id)->get(); //하위글 삭제시 부모글은 삭제되지 않도록
@@ -147,6 +157,7 @@ class QnaboardController extends Controller
                     $row->delete();
                 }
             }
+            $qna->delete();
             return redirect()->route('qnas.index');
         }
 
@@ -167,10 +178,18 @@ class QnaboardController extends Controller
     {
         $step = $qna->step;
         $indent = $qna->indent;
-
+//        DB::update('update qnaboards set step=$step+1 where group=$qna->group and step>$step');
         $parent = Qnaboard::firstWhere('id', $qna->id);
         $parent->has_reply++;
         $parent->save();
+        unset($parent);
+
+        $parent = Qnaboard::where('group', '=', $qna->group)->where('step', '>', $qna->step)->get();
+        foreach ($parent as $row) {
+            $row->has_reply++;
+            $row->step++;
+            $row->save();
+        }
 
         $reply = new Qnaboard([
             'author' => $request->input('author'),
@@ -221,9 +240,10 @@ class QnaboardController extends Controller
 //                return redirect()->route('qnas.destroy', $qna->id)->with(['verified' => $verified]);
 //                return redirect()->action([QnaboardController::class, 'create'],['qna'=>$qnaId])->header('');
 
-                 $qna= Qnaboard::whereId($qnaId);
+                $qna = Qnaboard::whereId($qnaId);
                 if ($qna->has_reply > 0) {  //답글이 달린 부모글 삭제시 답글도 모두 삭제
-                    $qnas = Qnaboard::whereGroup($qna->group)->where('id', '>=', $qna->id)->get(); //하위글 삭제시 부모글은 삭제되지 않도록
+                    $qnas = Qnaboard::whereGroup($qna->group)->where('id', '>=', $qna->id)->get(
+                    ); //하위글 삭제시 부모글은 삭제되지 않도록
                     foreach ($qnas as $row) {
                         $row->delete();
                     }
