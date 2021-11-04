@@ -51,4 +51,9 @@ class Qnaboard extends Model
     protected $hidden = [
         'password',
     ];
+
+    public function visit()
+    {
+        return visits($this);
+    }
 }

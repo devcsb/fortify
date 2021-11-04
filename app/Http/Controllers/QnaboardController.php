@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Qnaboard;
+use App\Notifications\qnaNotification;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
 use phpDocumentor\Reflection\DocBlock\Tags\Method;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -48,7 +50,7 @@ class QnaboardController extends Controller
      */
     public function store(Request $request)
     {
-        $selectRow = Qnaboard::orderByDesc('id')->get('id')->first(); // 리턴값 형식 collection
+        $selectRow = Qnaboard::orderByDesc('id')->first(); // 리턴값 형식 collection
         if (isset($selectRow)) // orderbyDesc 정렬 후 그 첫 값이 존재할 때. 즉, 누적된 글이 1개라도 있을 때
         {
             $lastId = $selectRow['id']; //collection에서 id값 추출
@@ -68,6 +70,10 @@ class QnaboardController extends Controller
         ]);
         $qna->save();
 
+        if (($qna->step === 0) && ($qna->indent === 0)) {
+//            Notification::route('mail', 'devcsb119@gmail.com')->notify(new qnaNotification($request->all()));
+        }
+
         return redirect()->route('qnas.index');
     }
 
@@ -80,8 +86,6 @@ class QnaboardController extends Controller
      */
     public function show(Qnaboard $qna)
     {
-        $parent = Qnaboard::where('group', '=', $qna->group)->where('step', '>', $qna->step)->get();
-//        dd($parent);
         if (!auth()->check()) {
             //비밀글이면서 session에 verified 값이 없을 때(check 통과하지 않았을 때)
             if ($qna->secret_flag == 1 && !Session::has('verified')) { // session flash 값은 다음 http요청시 바로 삭제됨
@@ -90,16 +94,19 @@ class QnaboardController extends Controller
         }
         $answer = null;
         if ($qna->has_reply !== 0) { //문의글 일 때
-            $answer = Qnaboard::whereGroup($qna->group)->where('id', '!=', $qna->id)->get(); // 부모글의 답글 가져오기
+            $answer = Qnaboard::whereGroup($qna->group)->where('id', '!=', $qna->id)->first(); // 부모글의 답글 하나만 가져오기
         }
 
         $parent = null;
         if ($qna->step !== 0) {
-            $parent = Qnaboard::whereGroup($qna->group)->where('id', '<', $qna->id)->get();
-//            dd($parent);
+            $parent = Qnaboard::whereGroup($qna->group)->whereIndent(0)->first();
+        }
+        //조회수 작업
+        if ($qna->visit()->increment()) { //visit 테이블에 카운팅 됐을 때
+            $qna->increment('hits'); //hits 컬럼 1증가
         }
 
-        return view('qnas.show', compact('qna', 'answer'));
+        return view('qnas.show', compact('qna', 'answer', 'parent'));
     }
 
     /**
@@ -170,6 +177,10 @@ class QnaboardController extends Controller
 
     public function createReply(Qnaboard $qna)
     {
+        if ($qna->indent > 0) {
+            Alert::warning('답글은 문의글에만 달 수 있습니다!');
+            return redirect()->back();
+        }
         return view('qnas.create_reply', compact('qna'));
     }
 
@@ -178,7 +189,6 @@ class QnaboardController extends Controller
     {
         $step = $qna->step;
         $indent = $qna->indent;
-//        DB::update('update qnaboards set step=$step+1 where group=$qna->group and step>$step');
         $parent = Qnaboard::firstWhere('id', $qna->id);
         $parent->has_reply++;
         $parent->save();
@@ -240,7 +250,8 @@ class QnaboardController extends Controller
 //                return redirect()->route('qnas.destroy', $qna->id)->with(['verified' => $verified]);
 //                return redirect()->action([QnaboardController::class, 'create'],['qna'=>$qnaId])->header('');
 
-                $qna = Qnaboard::whereId($qnaId);
+                $qna = Qnaboard::whereId($qnaId)->first(
+                ); //->get()은 리턴값을 eloquent collection 형태로 반환하고, ->first()는 쿼리 결과값인 model 객체를 반환한다.
                 if ($qna->has_reply > 0) {  //답글이 달린 부모글 삭제시 답글도 모두 삭제
                     $qnas = Qnaboard::whereGroup($qna->group)->where('id', '>=', $qna->id)->get(
                     ); //하위글 삭제시 부모글은 삭제되지 않도록

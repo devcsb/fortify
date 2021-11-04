@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -41,9 +40,11 @@
                         수정
                     </button>
                 </a>
-                <a href="{{ route('qnas.create_reply',['qna'=>$qna->id])}}" style="float: right; margin-top: 15px;">
-                    <button>답글 작성
-                    </button>
+                @if($qna->indent<1)
+                    <a href="{{ route('qnas.create_reply',['qna'=>$qna->id])}}" style="float: right; margin-top: 15px;">
+                        <button>답글 작성
+                        </button>
+                @endif
 
             </div>
         </div>
