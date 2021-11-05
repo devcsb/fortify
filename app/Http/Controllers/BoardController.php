@@ -28,18 +28,18 @@ class BoardController extends Controller
         $search = $request->input('search');
 
         $notices = Board::where('notice_flag', '=', 'Y')->orderBy('id')->paginate(10, ['*'], 'notice_page');
-        $boards = Board::where('title', 'Like', '%' . $request->search . '%')->orderByDesc('id')->paginate(10, ['*'], 'page');
+        $boards = Board::where('title', 'Like', '%' . $request->search . '%')->orderByDesc('id')->paginate(
+            10,
+            ['*'],
+            'page'
+        );
         //공지 1페이지에만 나오게 & 페이징 갯수에 공지글 포함
         // $boards = Board::where('title', 'Like', '%' . $request->search . '%')
         //     ->orderByRaw('FIELD(notice_flag,"Y","N")')
         //     ->orderByDesc('id')
         //     ->paginate(10);
 
-        if (count($boards) > 0) {
-            return view('boards.index', compact('boards', 'notices'))->withDetails([$boards, $notices])->withQuery($search);
-        } else {
-            return view('boards.index', compact('boards', 'notices'));
-        }
+        return view('boards.index', compact('boards', 'notices'))->withDetails([$boards, $notices])->withQuery($search);
     }
 
     /**
@@ -66,10 +66,6 @@ class BoardController extends Controller
         //RequestForm에서는 유효성 체크만 하고 비즈니스로직을 넣지말고 아래와 같이 유효성 값만 반환받아 컨트롤러에서 작성하자.
         $validated = $request->validated();
 
-
-        //파일명 변경위한 패턴 정의
-        $pattern = '/[@\,\?\*\.\;\!\$\#\%\^\&\(\)\-\=\+\`\~\" "]+/';
-
         $notice_falg = $request->notice_flag;
         if ($request->notice_flag !== 'Y') {
             $notice_falg = 'N';
@@ -80,10 +76,10 @@ class BoardController extends Controller
             'email' => $validated['email'],
             'title' => $validated['title'],
             'content' => $validated['content'],
-            'notice_flag' => $notice_falg,     //input 받은 값이 null일 경우, validation Form Request에서 반환받은 값으로는 접근 불가하므로 request에서 직접 가져다쓴다.(배열에 없는 값이므로)
+            'notice_flag' => $notice_falg,
+            //input 받은 값이 null일 경우, validation Form Request에서 반환받은 값으로는 접근 불가하므로 request에서 직접 가져다쓴다.(배열에 없는 값이므로)
         ]);
         $board->save();
-
 
         if ($request->hasFile('file')) {
             $seq = 0;
@@ -97,22 +93,22 @@ class BoardController extends Controller
 
                 //파일명에 확장자 붙여주기
                 $trimFileName = time() . '_' . $validated['name'] . '_' . $fileName . '.' . $fileExtension;
-                $filePath = $file->storeAs('uploads', $trimFileName, 'public'); // storeAs($path, $name, $disk); 세번째 $disk는 옵션. $disk에는 filesystems.php에서 정의한 disk를 선택
+                $filePath = $file->storeAs(
+                    'uploads',
+                    $trimFileName,
+                    'public'
+                ); // storeAs($path, $name, $disk); 세번째 $disk는 옵션. $disk에는 filesystems.php에서 정의한 disk를 선택
 
                 $file = new BoardFile([
                     'board_id' => $board->id,
                     'type' => 'board',
-                    'seq' => $seq += 1,
+                    'seq' => ++$seq,
                     'file_name' => $trimFileName,
                     'file_path' => $filePath,
                 ]);
                 $file->save();
-
             }
-
         }
-
-
         return redirect()->route('boards.index');
     }
 
@@ -171,11 +167,7 @@ class BoardController extends Controller
         //Policy 사용한 권한제어 // 책 366p. 첫번 째 파라미터로 어빌리티명, 두 번째로 객체를 받는 authorize()함수
         $this->authorize('update', $board);
 
-
         $validated = $request->validated();
-
-        // $board = Board::find($validated['email']); //find 메서드는 인자로 받은 id값으로 해당 행을 검색한다. where문이 아님. id값만 검색하는 메서드
-        $board = Board::firstWhere('email', $validated['email']);
 
         $board->name = $validated['name'];
         $board->email = $validated['email'];
@@ -183,41 +175,44 @@ class BoardController extends Controller
         $board->content = $validated['content'];
 
         if ($request->input('file_remove') == 'remove') {
-            File::delete(public_path() . '/storage/uploads/' . $board['file_name']);
-            $board->file_name = null;
-            $board->file_path = null;
+            foreach ($board->files as $file) {
+                File::delete(public_path() . '/storage/uploads/' . $file->file_name);
+                $file->delete();
+            }
         }
-
-        //파일명 변경위한 패턴 정의
-        $pattern = '/[@\,\?\*\.\;\!\$\#\%\^\&\(\)\-\=\+\`\~\" "]+/';
 
         if ($request->hasFile('file')) {
-            if (File::exists(public_path() . '/storage/uploads/' . $board['file_name'])) {
-                File::delete(public_path() . '/storage/uploads/' . $board['file_name']);
+            $seq = 0;
+            foreach ($board->files as $originalFile) {
+                File::delete(public_path() . '/storage/uploads/' . $originalFile->file_name);
+                $originalFile->delete();
             }
 
-            //이름변경 작업
-            $origin_name_arr = explode('.', $validated['file']->getClientOriginalName());
-            $origin_name = array_shift($origin_name_arr);
-            $convert_name = preg_replace($pattern, '', $origin_name);
+            foreach ($request->file('file') as $file) {
+                $fileOriName = $file->getClientOriginalName();
+                $fileName = substr($fileOriName, 0, strrpos($fileOriName, '.'));             // 확장자 뺀 파일명
+                $fileExtension = strtolower($file->getClientOriginalExtension());      // 파일 확장자
+                if (!in_array($fileExtension, ['jpeg', 'jpg', 'gif', 'png'])) {
+                    abort(403, '이 확장자를 가진 파일은 업로드 할 수 없습니다.');
+                }
 
+                $trimFileName = time() . '_' . $validated['name'] . '_' . $fileName . '.' . $fileExtension;
+                $filePath = $file->storeAs(
+                    'uploads',
+                    $trimFileName,
+                    'public'
+                );
 
-            //확장자 제어
-            $ext = array_pop($origin_name_arr);
-            $banned_ext = array('php', 'phps', 'php3', 'php4', 'php5', 'php7', 'pht', 'phtml', 'htaccess', 'html', 'htm', 'inc');
-            if (in_array($ext, $banned_ext)) {
-                abort(403, '이 확장자를 가진 파일은 업로드 할 수 없습니다.');
+                $file = new BoardFile([
+                    'board_id' => $board->id,
+                    'type' => 'board',
+                    'seq' => ++$seq,
+                    'file_name' => $trimFileName,
+                    'file_path' => $filePath,
+                ]);
+                $file->save();
             }
-
-            //파일명에 확장자 붙여주기
-            $convert_name = $convert_name . "." . $ext;
-
-            $fileName = time() . '_' . $validated['name'] . '_' . $convert_name;
-            $filePath = $validated['file']->storeAs('uploads', $fileName, 'public'); // storeAs($path, $name, $disk); 세번째 $disk는 옵션. $disk에는 filesystems.php에서 정의한 disk를 선택
-            $board->file_name = $fileName;
-            $board->file_path = $filePath;
         }
-
 
         $board->save();
 
@@ -233,7 +228,6 @@ class BoardController extends Controller
      */
     public function destroy(Board $board)
     {
-        dd($board);
         $this->authorize('delete', $board);
 
 
@@ -241,7 +235,6 @@ class BoardController extends Controller
             if (File::exists(public_path() . '/storage/uploads/' . $file->file_name)) {
                 File::delete(public_path() . '/storage/uploads/' . $file->file_name);
             }
-
         }
 
         $board->delete();

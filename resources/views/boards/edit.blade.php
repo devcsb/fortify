@@ -8,7 +8,6 @@
                 <div class="card">
                     <div class="card-header">{{ __('글 수정 ') }}</div>
 
-{{$board}}
                     <form action="{{ route('boards.update', $board->id) }}" method="post" name="updateForm"
                           enctype="multipart/form-data">
                         @csrf
@@ -34,19 +33,18 @@
                             </tr>
                             <tr>
                                 <td class="td_left"><label for="file">파일 첨부</label></td>
-                                <td class="td_right"><input type="file" name="file"/></td>
+                                <td class="td_right"><input type="file" name="file[]" multiple="multiple"/></td>
                             </tr>
+                            @foreach($board->files as $file)
+                                <tr>
+                                    <td class="td_left"></td>
+                                    <td class="td_right">
+                                        {{ $file->file_name }}</td>
+                                </tr>
+                            @endforeach
                             <tr>
                                 <td class="td_left"></td>
-                                @if (isset($board->file_path))
-                                    <td class="td_right"><label for="file">기존 첨부된 파일:{{ $board->file_name }}</label>
-                                    </td>
-                                @endif
-                            </tr>
-
-                            <tr>
-                                <td class="td_left"></td>
-                                @if (isset($board->file_path))
+                                @if (isset($board->files[0]->file_path))
                                     <td class="td_right">첨부파일 삭제하기<input type="checkbox" name="file_remove"
                                                                          value="remove"></td>
                                 @endif
