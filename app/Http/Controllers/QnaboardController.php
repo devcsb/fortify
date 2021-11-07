@@ -152,7 +152,7 @@ class QnaboardController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return Response
+     * @return RedirectResponse
      */
     public function destroy(Qnaboard $qna
     ) // Route Model Binding 규칙에 의거, 라우트에서 명시한 세그먼트 값{qna}와 일치하는 $qna 파라미터로 받아야 묵시적 바인딩이 자동으로 됨.

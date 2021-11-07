@@ -156,7 +156,7 @@ class BoardController extends Controller
     public function update(UpdateBoardRequest $request, Board $board)
     {
         //권한제어
-        // if ($board->email !== auth()->email()) {  //새로 만든 함수라서 에디터에서 인식 못하는 문제? or Auth/SessionGuard 커스텀시 수정해야하는 코드가 있는지?
+        // if ($board->email !== auth()->email()) {Auth/SessionGuard 커스텀시 수정해야하는 코드가 있는지?
         //     abort(403);
         // }
 
@@ -235,6 +235,7 @@ class BoardController extends Controller
             if (File::exists(public_path() . '/storage/uploads/' . $file->file_name)) {
                 File::delete(public_path() . '/storage/uploads/' . $file->file_name);
             }
+            $file->delete();
         }
 
         $board->delete();
